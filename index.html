@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصور عامر الرحيلي - الابتدائية الأولى (لوحة تحكم مادة الرياضيات)</title>
+    <title>منصور عامر الرحيلي - مدرسة داوود بن عروة الثقفي (لوحة تحكم مادة الرياضيات)</title>
     <!-- مكتبة SheetJS لتصدير واستيراد ملفات إكسل Excel -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <!-- مكتبة Chart.js للرسوم البيانية -->
@@ -537,11 +537,22 @@
         .float-whatsapp { background: #25D366; }
         .float-top { background: var(--primary); display: none; }
 
+        /* تنسيقات الطباعة */
         @media print {
+            body { background: white !important; color: black !important; padding: 0 !important; }
+            .top-banner, .subscription-badge, .theme-switcher, .floating-action-buttons, .toast,
+            .btn-action, .backup-controls, .pagination-bar, .form-row, .classes-query-grid,
+            .no-print, button, input, select, .sub-box, .searchable-dropdown-container { display: none !important; }
+            
+            .container { max-width: 100% !important; margin: 0 !important; width: 100% !important; }
+            .section-card { box-shadow: none !important; border: 1px solid #ccc !important; page-break-inside: avoid; }
+            
             body * { visibility: hidden; }
-            .print-active-section, .print-active-section * { visibility: visible; }
-            .print-active-section { position: absolute; left: 0; top: 0; width: 100%; background: white !important; }
-            .btn-action, .backup-controls, .pagination-bar, .form-row, .classes-query-grid, .no-print { display: none !important; }
+            .print-target, .print-target * { visibility: visible; }
+            .print-target { position: absolute; left: 0; top: 0; width: 100%; }
+            table { width: 100% !important; border-collapse: collapse !important; }
+            th, td { border: 1px solid #000 !important; padding: 6px !important; color: black !important; }
+            input[type="number"] { border: none !important; background: transparent !important; }
         }
     </style>
 </head>
@@ -553,7 +564,7 @@
     </div>
 
     <div class="header">
-        <h1>الابتدائية الأولى (طالبات)</h1>
+        <h1>مدرسة داوود بن عروة الثقفي (طلاب)</h1>
         <div>إعداد المعلم: منصور عامر الرحيلي</div>
         <p>لوحة تحكم معلم مادة الرياضيات للمرحلة الابتدائية (وفق المنهج السعودي)</p>
         <div class="subscription-badge">⏳ نهاية الاشتراك: 2027/07/01</div>
@@ -586,7 +597,7 @@
         <!-- الإحصائيات -->
         <div class="stats-grid">
             <div class="stat-card">
-                <h3>👥 إجمالي الطالبات</h3>
+                <h3>👥 إجمالي الطلاب</h3>
                 <p id="totalStudents">0</p>
             </div>
             <div class="stat-card">
@@ -632,12 +643,12 @@
                     <strong id="kpiCurriculumProgress">0%</strong>
                 </div>
                 <div class="detail-item">
-                    <span>🌟 نسبة الطالبات المتفوقات (أعلى من 85%)</span>
+                    <span>🌟 نسبة الطلاب المتفوقين (أعلى من 85%)</span>
                     <strong id="kpiExcellenceRate">0%</strong>
                 </div>
                 <div class="detail-item">
-                    <span>⚠️ طالبات بحاجة لدعم عاجل</span>
-                    <strong id="kpiAtRiskCount" style="color: var(--danger);">0 طالبة</strong>
+                    <span>⚠️ طلاب بحاجة لدعم عاجل</span>
+                    <strong id="kpiAtRiskCount" style="color: var(--danger);">0 طالب</strong>
                 </div>
                 <div class="detail-item">
                     <span>📈 متوسط تحصيل اختبارات الفترات</span>
@@ -646,10 +657,10 @@
             </div>
 
             <div class="sub-box" style="margin-top: 15px; border-color: var(--danger);">
-                <h5 style="color: var(--danger);">⚠️ قائمة طالبات بحاجة لدعم عاجل في الرياضيات (أقل من 60% أو تحصيل منخفض)</h5>
+                <h5 style="color: var(--danger);">⚠️ قائمة طلاب بحاجة لدعم عاجل في الرياضيات (أقل من 60% أو تحصيل منخفض)</h5>
                 <div class="form-row" style="margin-bottom: 0;">
                     <select id="atRiskDropdown" onchange="selectAtRiskStudent(this.value)">
-                        <option value="">-- اختر طالبة من قائمة الدعم العاجل لعرض ملفها --</option>
+                        <option value="">-- اختر طالباً من قائمة الدعم العاجل لعرض ملفه --</option>
                     </select>
                 </div>
             </div>
@@ -664,18 +675,18 @@
             </div>
         </div>
 
-        <!-- تسجيل الطالبات والصفوف والجدول -->
+        <!-- تسجيل الطلاب والصفوف والجدول -->
         <div class="section-card" id="studentsTableSection">
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 10px; margin-bottom: 15px;">
-                <h3 style="margin: 0; border: none; padding: 0;">✏️ تسجيل الطالبات والصفوف ومتابعتهن</h3>
-                <button class="btn-print" onclick="printSection('studentsTableSection')" title="طباعة جدول الطالبات والصفوف">🖨️ طباعة الجدول</button>
+                <h3 style="margin: 0; border: none; padding: 0;">✏️ تسجيل الطلاب والصفوف ومتابعة السجل</h3>
+                <button class="btn-print" onclick="printSection('studentsTableSection')" title="طباعة جدول الطلاب والصفوف">🖨️ طباعة الجدول</button>
             </div>
             
             <div class="form-row">
-                <input type="text" id="studentName" placeholder="اسم الطالبة (Student Name)">
+                <input type="text" id="studentName" placeholder="اسم الطالب (Student Name)">
                 <input type="text" id="studentClassCustom" placeholder="اكتب الصف (مثال: رابع ابتدائي أول)">
                 <input type="tel" id="studentPhone" placeholder="رقم جوال ولي الأمر (مثال: 05xxxxxxx)">
-                <button onclick="addStudent()">➕ إضافة طالبة</button>
+                <button onclick="addStudent()">➕ إضافة طالب</button>
             </div>
 
             <div style="margin-top: 20px;">
@@ -684,15 +695,15 @@
             </div>
 
             <div class="form-row" style="align-items: center; background: rgba(0,0,0,0.03); padding: 8px; border-radius: 6px; margin-top: 15px;">
-                <span style="font-weight: bold; font-size: 14px;">🔍 بحث عن طالبة محددة بالاسم:</span>
-                <input type="text" id="filterStudentNameInput" placeholder="اكتب اسم الطالبة للبحث..." oninput="filterTableByStudentInput()" style="max-width: 320px;">
+                <span style="font-weight: bold; font-size: 14px;">🔍 بحث عن طالب محدد بالاسم:</span>
+                <input type="text" id="filterStudentNameInput" placeholder="اكتب اسم الطالب للبحث..." oninput="filterTableByStudentInput()" style="max-width: 320px;">
             </div>
 
             <div style="overflow-x: auto;">
                 <table>
                     <thead>
                         <tr>
-                            <th>اسم الطالبة</th>
+                            <th>اسم الطالب</th>
                             <th>🏫 الصف</th>
                             <th>📱 رقم الجوال</th>
                             <th>🔴 الغياب</th>
@@ -759,7 +770,7 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>اسم الطالبة</th>
+                            <th>اسم الطالب</th>
                             <th>🏫 الصف</th>
                             <th>📝 اختبار الفترة الأولى (من 20)</th>
                             <th>📝 اختبار الفترة الثانية (من 20)</th>
@@ -767,25 +778,25 @@
                         </tr>
                     </thead>
                     <tbody id="examsTbody">
-                        <tr><td colspan="5" style="padding: 20px; opacity: 0.7;">الرجاء اختيار الصف الدراسي من القائمة أعلاه لعرض رصد واختبارات الطالبات.</td></tr>
+                        <tr><td colspan="5" style="padding: 20px; opacity: 0.7;">الرجاء اختيار الصف الدراسي من القائمة أعلاه لعرض رصد واختبارات الطلاب.</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- استعلام عن طالبة -->
-        <div class="section-card">
-            <h3>🔍 استعلام وتتبع طالبة محددة</h3>
+        <!-- استعلام عن طالب -->
+        <div class="section-card" id="studentReportPrintArea">
+            <h3>🔍 استعلام وتتبع طالب محدد</h3>
             <div class="form-row">
                 <div class="searchable-dropdown-container">
-                    <input type="text" id="studentSearchInput" class="searchable-input" placeholder="اكتب اسم الطالبة للبحث الحر بالكيبورد..." oninput="filterStudentDropdown()" onfocus="showStudentDropdown()" autocomplete="off">
+                    <input type="text" id="studentSearchInput" class="searchable-input" placeholder="اكتب اسم الطالب للبحث الحر بالكيبورد..." oninput="filterStudentDropdown()" onfocus="showStudentDropdown()" autocomplete="off">
                     <div id="studentDropdownList" class="searchable-dropdown-list"></div>
                 </div>
             </div>
 
             <div id="studentCard" style="display: none;">
                 <div>
-                    <h4>سجل الطالبة: <span id="selectedName"></span> (<span id="selectedClassBadge" class="class-badge"></span>)</h4>
+                    <h4>سجل الطالب: <span id="selectedName"></span> (<span id="selectedClassBadge" class="class-badge"></span>)</h4>
                     <div class="student-details">
                         <div class="detail-item"><span>المشاركات</span><strong id="sdParticipation">0</strong></div>
                         <div class="detail-item"><span>الواجبات</span><strong id="sdHomework">0</strong></div>
@@ -797,7 +808,7 @@
                 </div>
 
                 <div class="form-row" style="margin-top: 15px;">
-                    <button class="btn-print" onclick="printStudentReport()">🖨️ طباعة تقرير الطالبة الرسمي</button>
+                    <button class="btn-print" onclick="printStudentReport()">🖨️ طباعة تقرير الطالب الرسمي</button>
                     <button class="whatsapp-btn" onclick="sendFullReportWhatsApp()" style="border: none; cursor: pointer; margin-top: 0;">📤 إرسال التقرير الشامل لولي الأمر عبر واتساب</button>
                 </div>
 
@@ -899,9 +910,9 @@
 
     <script>
         const TEACHER_NAME = "منصور عامر الرحيلي";
-        const SCHOOL_NAME = "الابتدائية الأولى (طالبات)";
+        const SCHOOL_NAME = "مدرسة داوود بن عروة الثقفي (طلاب)";
 
-        let currentGrade = localStorage.getItem('awwal_current_grade_math_v4') || 'الأول الابتدائي';
+        let currentGrade = localStorage.getItem('mansour_current_grade_math_v4') || 'الأول الابتدائي';
         document.getElementById('globalGradeSelect').value = currentGrade;
 
         let activeQueryClass = '';
@@ -910,21 +921,20 @@
         const rowsPerPage = 20;
 
         const defaultMotivations = [
-            { id: "1", title: "1. عبقري الرياضيات المتميز", text: "🌟 **عبقري الرياضيات المتميز** 🌟\nعزيزي ولي الأمر، نفخر اليوم بتميز ابنتكم وتألقها في حصة الرياضيات وحل المسائل الحسابية بدقة وسرعة. بوركت جهودكم!" },
-            { id: "2", title: "2. تفوق ملحوظ في التفكير المنطقي", text: "🔢 **تفوق ملحوظ في التفكير المنطقي والعد** 🔢\nعزيزي ولي الأمر، أظهرت ابنتكم اليوم مهارات فائقة في استنتاج الحلول الرياضية بدقة متناهية. أحسنت صنعاً!" },
-            { id: "3", title: "3. دقة وإتقان في العمليات الحسابية", text: "➕ **دقة وإتقان في الجمع والطرح والعمليات** ✖️\nعزيزي ولي الأمر، تميزت ابنتكم اليوم بحل المسائل الحسابية المعقدة بمهارة وذكاء. بارك الله في جهودها!" },
-            { id: "4", title: "4. مشاركة نشطة وفعالة في حصة الرياضيات", text: "✋ **مشاركة نشطة وتفاعل رياضي متميز** ✋\nعزيزي ولي الأمر، تميزت ابنتكم اليوم بحرصها العالي ومشاركتها النشطة وإجاباتها الرياضية الموفقة داخل الصف." },
-            { id: "5", title: "5. إتقان رائع للهندسة والأشكال والأقياس", text: "📐 **إتقان رائع للهندسة والأشكال القياسية** 📏\nعزيزي ولي الأمر، أبدعت ابنتكم اليوم في تمييز الأشكال الهندسية وقياس الأطوال بدقة عالية. مبروك لها!" },
-            { id: "6", title: "6. تنظيم رائع للدفتر وحل التمارين بمرتبة", text: "📝 **تنظيم رائع للواجبات والتمارين الرياضية** 📝\nعزيزي ولي الأمر، نشكر لكم متابعتكم المنزلية الواعية. لقد كان حل ابنتكم للتمارين اليوم منظماً ودقيقاً للغاية." },
-            { id: "7", title: "7. حل ممتاز لاختبارات التقويم والمسائل", text: "✍️ **حل ممتاز للمسائل والتقويم المستمر**\nعزيزي ولي الأمر، تميز أداء ابنتكم اليوم بحل مسائل الرياضيات والتمارين الإثرائية بدقة عالية. دمت متميزة يا بطلة!" },
-            { id: "8", title: "8. إبداع في حل المسائل اللفظية والكلامية", text: "🧠 **إبداع في تحليل وحل المسائل الكلامية**\nعزيزي ولي الأمر، أظهرت ابنتكم اليوم شغفاً وفهماً عميقاً لتحليل المسائل اللفظية وتحويلها إلى معادلات ناجحة." },
-            { id: "9", title: "9. مشاركة فعالة في الأنشطة الذهنية والعد", text: "⚡ **سرعة وبديهة متميزة في الحساب الذهني**\nعزيزي ولي الأمر، قدمت ابنتكم اليوم أداءً استثنائياً في مهارات الحساب الذهني السريع." },
-            { id: "10", title: "10. اجتهاد وحرص عالٍ على إتقان مهارات الرياضيات", text: "⭐ **اجتهاد وحرص عالٍ على إتقان الرياضيات**\nعزيزي ولي الأمر، إن حرص ابنتكم المستمر على التطور وحل التمارين في مادة الرياضيات محل تقديرنا الدائم." }
+            { id: "1", title: "1. عبقري الرياضيات المتميز", text: "🌟 **عبقري الرياضيات المتميز** 🌟\nعزيزي ولي الأمر، نفخر اليوم بتميز ابنك وتألقه في حصة الرياضيات وحل المسائل الحسابية بدقة وسرعة. بوركت جهودكم!" },
+            { id: "2", title: "2. تفوق ملحوظ في التفكير المنطقي", text: "🔢 **تفوق ملحوظ في التفكير المنطقي والعد** 🔢\nعزيزي ولي الأمر، أظهر ابنك اليوم مهارات فائقة في استنتاج الحلول الرياضية بدقة متناهية. أحسن صنعاً!" },
+            { id: "3", title: "3. دقة وإتقان في العمليات الحسابية", text: "➕ **دقة وإتقان في الجمع والطرح والعمليات** ✖️\nعزيزي ولي الأمر، تميز ابنك اليوم بحل المسائل الحسابية المعقدة بمهارة وذكاء. بارك الله في جهوده!" },
+            { id: "4", title: "4. مشاركة نشطة وفعالة في حصة الرياضيات", text: "✋ **مشاركة نشطة وتفاعل رياضي متميز** ✋\nعزيزي ولي الأمر، تميز ابنك اليوم بحرصه العالي ومشاركته النشطة وإجاباته الرياضية الموفقة داخل الصف." },
+            { id: "5", title: "5. إتقان رائع للهندسة والأشكال والأقياس", text: "📐 **إتقان رائع للهندسة والأشكال القياسية** 📏\nعزيزي ولي الأمر، أبدع ابنك اليوم في تمييز الأشكال الهندسية وقياس الأطوال بدقة عالية. مبروك له!" },
+            { id: "6", title: "6. تنظيم رائع للدفتر وحل التمارين بمرتبة", text: "📝 **تنظيم رائع للواجبات والتمارين الرياضية** 📝\nعزيزي ولي الأمر، نشكر لكم متابعتكم المنزلية الواعية. لقد كان حل ابنك للتمارين اليوم منظماً ودقيقاً للغاية." },
+            { id: "7", title: "7. حل ممتاز لاختبارات التقويم والمسائل", text: "✍️ **حل ممتاز للمسائل والتقويم المستمر**\nعزيزي ولي الأمر، تميز أداء ابنك اليوم بحل مسائل الرياضيات والتمارين الإثرائية بدقة عالية. دمت متميزاً يا بطل!" },
+            { id: "8", title: "8. إبداع في حل المسائل اللفظية والكلامية", text: "🧠 **إبداع في تحليل وحل المسائل الكلامية**\nعزيزي ولي الأمر، أظهر ابنك اليوم شغفاً وفهماً عميقاً لتحليل المسائل اللفظية وتحويلها إلى معادلات ناجحة." },
+            { id: "9", title: "9. مشاركة فعالة في الأنشطة الذهنية والعد", text: "⚡ **سرعة وبديهة متميزة في الحساب الذهني**\nعزيزي ولي الأمر، قدم ابنك اليوم أداءً استثنائياً في مهارات الحساب الذهني السريع." },
+            { id: "10", title: "10. اجتهاد وحرص عالٍ على إتقان مهارات الرياضيات", text: "⭐ **اجتهاد وحرص عالٍ على إتقان الرياضيات**\nعزيزي ولي الأمر، إن حرص ابنك المستمر على التطور وحل التمارين في مادة الرياضيات محل تقديرنا الدائم." }
         ];
 
-        let customMotivations = JSON.parse(localStorage.getItem('awwal_custom_motivations_math_v4')) || defaultMotivations;
+        let customMotivations = JSON.parse(localStorage.getItem('mansour_custom_motivations_math_v4')) || defaultMotivations;
 
-        // المنهج السعودي لمادة الرياضيات للفصلين (الأول والثاني) لكل صف ابتدائي
         const gradeMathData = {
             "الأول الابتدائي": [
                 { chapter: "الفصل 1: المقارنة والتصنيف", title: "التصنيف وفق خاصية واحدة والمقارنة", desc: "تصنيف الأشياء حسب اللون، الشكل، أو الحجم والمقارنة بينها." },
@@ -968,7 +978,7 @@
             ],
             "الخامس الابتدائي": [
                 { chapter: "الفصل 1: الجبر والدوال", title: "العبارات الجبرية والجداول", desc: "كتابة الجبر واستعمال ترتيب العمليات الحسابية." },
-                { chapter: "الفصل 2: الإحصاء والتمثيلات", title: "التمثيل بالخطوط والقطاعات الدائرية", desc: "تحليل البيانات واستخراج المتوسط الحسابي والوسيط والمنوال." },
+                { chapter: "الفصل 2: الإحصاء والتمثيلات", title: "التمثيل بالخطوط والقطاعات الدائرية", desc: "تحليل البيانات واستخرج المتوسط الحسابي والوسيط والمنوال." },
                 { chapter: "الفصل 3: عمليات على الكسور العشرية", title: "جمع وطرح وضرب وقسمة الكسور العشرية", desc: "العمليات الحسابية الكاملة على الفاصلة العشرية." },
                 { chapter: "الفصل 4: القواسم والمضاعفات", title: "الأعداد الأولية وغير الأولية والتحليل", desc: "إيجاد القاسم المشترك الأكبر والمضاعف المشترك الأصغر." },
                 { chapter: "الفصل 5: جمع الكسور وطرحها", title: "توحيد المقامات والعمليات على الكسور", desc: "جمع وطرح الكسور الاعتيادية ذات المقامات المختلفة." },
@@ -988,17 +998,50 @@
             ]
         };
 
-        function getStorageKeyForLessons() { return 'awwal_custom_lessons_math_' + currentGrade + '_v4'; }
-        function getStorageKeyForStudents() { return 'awwal_students_math_' + currentGrade + '_v4'; }
-        function getStorageKeyForStatus() { return 'awwal_lesson_status_math_' + currentGrade + '_v4'; }
+        function getStorageKeyForLessons() { return 'mansour_custom_lessons_math_' + currentGrade + '_v4'; }
+        function getStorageKeyForStudents() { return 'mansour_students_math_' + currentGrade + '_v4'; }
+        function getStorageKeyForStatus() { return 'mansour_lesson_status_math_' + currentGrade + '_v4'; }
 
         let lessons = JSON.parse(localStorage.getItem(getStorageKeyForLessons())) || gradeMathData[currentGrade];
         let students = JSON.parse(localStorage.getItem(getStorageKeyForStudents())) || [];
         let lessonStatus = JSON.parse(localStorage.getItem(getStorageKeyForStatus())) || {};
 
+        function printSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (!section) return;
+            section.classList.add('print-target');
+            window.print();
+            section.classList.remove('print-target');
+        }
+
+        function printStudentReport() {
+            if (selectedStudentIndex === '') {
+                alert('الرجاء اختيار طالب من القائمة أولاً لطباعة تقريره.');
+                return;
+            }
+            const printArea = document.getElementById('studentReportPrintArea');
+            if (!printArea) return;
+            printArea.classList.add('print-target');
+            window.print();
+            printArea.classList.remove('print-target');
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        window.addEventListener('scroll', function() {
+            const btn = document.getElementById('scrollToTopBtn');
+            if (window.scrollY > 300) {
+                btn.style.display = 'flex';
+            } else {
+                btn.style.display = 'none';
+            }
+        });
+
         function changeGradeLevel(grade) {
             currentGrade = grade;
-            localStorage.setItem('awwal_current_grade_math_v4', currentGrade);
+            localStorage.setItem('mansour_current_grade_math_v4', currentGrade);
             
             lessons = JSON.parse(localStorage.getItem(getStorageKeyForLessons())) || gradeMathData[currentGrade];
             students = JSON.parse(localStorage.getItem(getStorageKeyForStudents())) || [];
@@ -1126,7 +1169,7 @@
             const sClass = document.getElementById('studentClassCustom').value.trim() || currentGrade;
             const phone = document.getElementById('studentPhone').value.trim();
 
-            if(!name) { alert('الرجاء إدخال اسم الطالبة'); return; }
+            if(!name) { alert('الرجاء إدخال اسم الطالب'); return; }
 
             students.push({
                 name: name,
@@ -1146,7 +1189,7 @@
             document.getElementById('studentName').value = '';
             document.getElementById('studentPhone').value = '';
             render();
-            showToast('➕ تمت إضافة الطالبة بنجاح!');
+            showToast('➕ تمت إضافة الطالب بنجاح!');
         }
 
         function renderStudentsTable() {
@@ -1171,13 +1214,13 @@
             const pageData = filtered.slice(startIdx, startIdx + rowsPerPage);
 
             if(pageData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="10" style="padding: 20px; opacity: 0.7;">لا توجد بيانات طالبات مسجلة حالياً.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="10" style="padding: 20px; opacity: 0.7;">لا توجد بيانات طلاب مسجلة حالياً.</td></tr>`;
                 document.getElementById('paginationInfo').textContent = `عرض 0 من 0`;
                 document.getElementById('pageIndicator').textContent = `1 / 1`;
                 return;
             }
 
-            pageData.forEach((s, idx) => {
+            pageData.forEach((s) => {
                 const globalIndex = students.indexOf(s);
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
@@ -1195,22 +1238,22 @@
                 tbody.appendChild(tr);
             });
 
-            document.getElementById('paginationInfo').textContent = `عرض من ${startIdx + 1} إلى ${Math.min(startIdx + rowsPerPage, totalRows)} من أصل ${totalRows} طالبة`;
+            document.getElementById('paginationInfo').textContent = `عرض من ${startIdx + 1} إلى ${Math.min(startIdx + rowsPerPage, totalRows)} من أصل ${totalRows} طالب`;
             document.getElementById('pageIndicator').textContent = `${currentPage} / ${totalPages}`;
         }
 
         function updateStudentField(index, field, val) {
             students[index][field] = Number(val) || 0;
             localStorage.setItem(getStorageKeyForStudents(), JSON.stringify(students));
-            showToast('✅ تم تحديث بيانات الطالبة وحفظها!');
+            showToast('✅ تم تحديث بيانات الطالب وحفظها!');
         }
 
         function deleteStudent(index) {
-            if(confirm('هل أنت متأكد من حذف هذه الطالبة؟')) {
+            if(confirm('هل أنت متأكد من حذف هذا الطالب؟')) {
                 students.splice(index, 1);
                 localStorage.setItem(getStorageKeyForStudents(), JSON.stringify(students));
                 render();
-                showToast('🗑️ تم حذف الطالبة بنجاح!');
+                showToast('🗑️ تم حذف الطالب بنجاح!');
             }
         }
 
@@ -1260,12 +1303,12 @@
 
         function deleteEntireClass(cName, event) {
             event.stopPropagation();
-            if(confirm(`هل أنت متأكد من حذف جميع طالبات الصف (${cName})؟`)) {
+            if(confirm(`هل أنت متأكد من حذف جميع طلاب الصف (${cName})؟`)) {
                 students = students.filter(s => (s.classCustom || currentGrade) !== cName);
                 localStorage.setItem(getStorageKeyForStudents(), JSON.stringify(students));
                 if(activeQueryClass === cName) activeQueryClass = '';
                 render();
-                showToast('🗑️ تمت إزالة الصف وطالباته بنجاح!');
+                showToast('🗑️ تمت إزالة الصف وطلابه بنجاح!');
             }
         }
 
@@ -1295,14 +1338,14 @@
             tbody.innerHTML = '';
 
             if(!selectedClass) {
-                tbody.innerHTML = `<tr><td colspan="5" style="padding: 20px; opacity: 0.7;">الرجاء اختيار الصف الدراسي من القائمة أعلاه لعرض رصد واختبارات الطالبات.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" style="padding: 20px; opacity: 0.7;">الرجاء اختيار الصف الدراسي من القائمة أعلاه لعرض رصد واختبارات الطلاب.</td></tr>`;
                 analysisBox.style.display = 'none';
                 return;
             }
 
             const classStudents = students.filter(s => (s.classCustom || currentGrade) === selectedClass);
             if(classStudents.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="padding: 20px; opacity: 0.7;">لا توجد طالبات مسجلات في هذا الصف.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" style="padding: 20px; opacity: 0.7;">لا توجد طلاب مسجلون في هذا الصف.</td></tr>`;
                 analysisBox.style.display = 'none';
                 return;
             }
@@ -1322,7 +1365,7 @@
                     <td><input type="number" min="0" max="20" value="${s.exam1 || 0}" style="width:70px; text-align:center;" onchange="updateExamScore(${globalIndex}, 'exam1', this.value)"></td>
                     <td><input type="number" min="0" max="20" value="${s.exam2 || 0}" style="width:70px; text-align:center;" onchange="updateExamScore(${globalIndex}, 'exam2', this.value)"></td>
                     <td class="no-print">
-                        <a href="https://wa.me/${s.phone || ''}?text=${encodeURIComponent('عزيزي ولي أمر الطالبة ' + s.name + '، نود إفادتكم بدرجات اختبارات مادة الرياضيات:\n- اختبار الفترة الأولى: ' + (s.exam1 || 0) + '/20\n- اختبار الفترة الثانية: ' + (s.exam2 || 0) + '/20\nمع تمنياتنا لها بدوام التوفيق والنجاح.')}" target="_blank" class="whatsapp-btn" style="padding:4px 10px; font-size:12px;" onclick="incrementMessageCount()">📤 إرسال عبر واتساب</a>
+                        <a href="https://wa.me/${s.phone || ''}?text=${encodeURIComponent('عزيزي ولي أمر الطالب ' + s.name + '، نود إفادتكم بدرجات اختبارات مادة الرياضيات:\n- اختبار الفترة الأولى: ' + (s.exam1 || 0) + '/20\n- اختبار الفترة الثانية: ' + (s.exam2 || 0) + '/20\nمع تمنياتنا له بدوام التوفيق والنجاح.')}" target="_blank" class="whatsapp-btn" style="padding:4px 10px; font-size:12px;" onclick="incrementMessageCount()">📤 إرسال عبر واتساب</a>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -1340,10 +1383,10 @@
         }
 
         function exportExcel() {
-            if(students.length === 0) { alert('لا توجد بيانات طالبات لتصديرها!'); return; }
+            if(students.length === 0) { alert('لا توجد بيانات طلاب لتصديرها!'); return; }
             const dataToExport = students.map((s, idx) => ({
                 "م": idx + 1,
-                "اسم الطالبة": s.name,
+                "اسم الطالب": s.name,
                 "الصف": s.classCustom || currentGrade,
                 "رقم الجوال": s.phone || '',
                 "الغياب": s.absence || 0,
@@ -1360,7 +1403,7 @@
             ws['!views'].push({ rightToLeft: true });
 
             const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "سجل طالبات الرياضيات");
+            XLSX.utils.book_append_sheet(wb, ws, "سجل طلاب الرياضيات");
             XLSX.writeFile(wb, `سجل_الرياضيات_${currentGrade}.xlsx`);
             showToast('📊 تم تصدير ملف الإكسل بنجاح!');
         }
@@ -1385,7 +1428,7 @@
 
                     let count = 0;
                     jsonData.forEach(row => {
-                        const name = row["اسم الطالبة"] || row["اسم الطالب"] || row["الاسم"] || "";
+                        const name = row["اسم الطالب"] || row["اسم الطالبة"] || row["الاسم"] || "";
                         const sClass = row["الصف"] || row["الصف/الشعبة"] || row["Class"] || currentGrade;
                         const phone = row["رقم الجوال"] || row["الجوال"] || row["Phone"] || "";
 
@@ -1409,7 +1452,7 @@
 
                     localStorage.setItem(getStorageKeyForStudents(), JSON.stringify(students));
                     render();
-                    showToast(`📂 تمت استعادة واستيراد (${count}) طالبة بنجاح من ملف الإكسل!`);
+                    showToast(`📂 تمت استعادة واستيراد (${count}) طالب بنجاح من ملف الإكسل!`);
                 } catch(err) {
                     console.error(err);
                     alert('حدث خطأ أثناء قراءة ملف الإكسل.');
@@ -1524,7 +1567,7 @@
             }
 
             const l = lessons[lessonIdx];
-            const msg = `عزيزي ولي أمر الطالبة / ${s.name}\nنحيطكم علماً بأننا تناولنا اليوم في مادة الرياضيات درس:\n📘 (${l.chapter}) - ${l.title}\n💡 المفاهيم والتمارين المرتبطة: ${l.desc}\nنرجو منكم متابعة ابنتكم وتعزيز مهاراتها الحسابية.\nمع تقديـرنا، المعلم: ${TEACHER_NAME} - ${SCHOOL_NAME}`;
+            const msg = `عزيزي ولي أمر الطالب / ${s.name}\nنحيطكم علماً بأننا تناولنا اليوم في مادة الرياضيات درس:\n📘 (${l.chapter}) - ${l.title}\n💡 المفاهيم والتمارين المرتبطة: ${l.desc}\nنرجو منكم متابعة ابنكم وتعزيز مهاراته الحسابية.\nمع تقديـرنا، المعلم: ${TEACHER_NAME} - ${SCHOOL_NAME}`;
             
             preview.textContent = msg;
             btn.href = `https://wa.me/${s.phone || ''}?text=` + encodeURIComponent(msg);
@@ -1549,7 +1592,7 @@
                 text = customMotivations[idx].text;
             }
 
-            const finalMsg = `إلى ولي أمر الطالبة / ${s.name}\n\n${text}\n\nمع خالص الشكر، المعلم: ${TEACHER_NAME} - ${SCHOOL_NAME}`;
+            const finalMsg = `إلى ولي أمر الطالب / ${s.name}\n\n${text}\n\nمع خالص الشكر، المعلم: ${TEACHER_NAME} - ${SCHOOL_NAME}`;
             preview.textContent = finalMsg;
             btn.href = `https://wa.me/${s.phone || ''}?text=` + encodeURIComponent(finalMsg);
         }
@@ -1560,7 +1603,7 @@
             if(!title || !text) { alert('الرجاء كتابة عنوان ونصح الرسالة التشجيعية'); return; }
 
             customMotivations.push({ id: Date.now().toString(), title: title, text: text });
-            localStorage.setItem('awwal_custom_motivations_math_v4', JSON.stringify(customMotivations));
+            localStorage.setItem('mansour_custom_motivations_math_v4', JSON.stringify(customMotivations));
             
             document.getElementById('newMotivationTitle').value = '';
             document.getElementById('newMotivationText').value = '';
@@ -1614,13 +1657,13 @@
             }
 
             targetStudents = targetStudents.filter(s => s.phone && s.phone.trim() !== '');
-            if(targetStudents.length === 0) { alert('لا توجد أرقام جوالات مسجلة للطالبات المستهدفات'); return; }
+            if(targetStudents.length === 0) { alert('لا توجد أرقام جوالات مسجلة للطلاب المستهدفين'); return; }
 
             let msg = document.getElementById('bulkMsgPreview').textContent;
             
             targetStudents.forEach((s, i) => {
                 setTimeout(() => {
-                    window.open(`https://wa.me/${s.phone}?text=` + encodeURIComponent(`عزيزي ولي أمر الطالبة / ${s.name}\n\n` + msg), '_blank');
+                    window.open(`https://wa.me/${s.phone}?text=` + encodeURIComponent(`عزيزي ولي أمر الطالب / ${s.name}\n\n` + msg), '_blank');
                 }, i * 600);
             });
             showToast('🚀 جاري فتح رسائل الواتساب الجماعية...');
@@ -1628,10 +1671,10 @@
 
         function setTheme(themeName) {
             document.body.className = themeName;
-            localStorage.setItem('awwal_math_theme_v4', themeName);
+            localStorage.setItem('mansour_math_theme_v4', themeName);
         }
 
-        const savedTheme = localStorage.getItem('awwal_math_theme_v4');
+        const savedTheme = localStorage.getItem('mansour_math_theme_v4');
         if(savedTheme) document.body.className = savedTheme;
 
         window.onload = function() {
