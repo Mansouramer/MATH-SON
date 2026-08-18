@@ -18,7 +18,7 @@
             --warning: #f59e0b;
             --info: #06b6d4;
             --excel: #1d6f42;
-    @media print {
+ @media print {
     @page {
       size: landscape;
       margin: 5mm;
@@ -26,17 +26,26 @@
 
     body {
       transform: scale(0.85);
-      transform-origin: top right;
+      transform-origin: top center; /* اجعلها top center لتتوسط الصفحة تماماً */
       width: 100% !important;
     }
 
     html, body, div, .container, .card {
       max-width: 100% !important;
-      margin: 0 !important;
+      margin: 0 auto !important; /* توسط العناصر أفقياً */
       padding: 0 !important;
       box-shadow: none !important;
       background: transparent !important;
     }
+
+    button, .btn, .no-print, nav, header {
+      display: none !important;
+    }
+
+    table, tr, td, th, .card {
+      page-break-inside: avoid;
+    }
+  }
 
     button, .btn, .no-print, nav, header {
       display: none !important;
