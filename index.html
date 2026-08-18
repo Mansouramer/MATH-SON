@@ -818,7 +818,7 @@
                 <button class="btn-print" onclick="printSection('lessonsMasterySection')" title="طباعة سجل إتقان الدروس">🖨️ طباعة سجل الإتقان</button>
             </div>
             <p style="font-size: 13px; opacity: 0.85; margin-bottom: 15px;">
-                اختر الدرس أدناه لتحديث حالة إتقان كل طالب في الصف الحالي (اضغط على الزر لتغيير الحالة بين <strong>✅ أتقن</strong> و <strong>❌ لم يتقن</strong>):
+                اختر الدرس أدناه لتحديث حالة إتقان كل طالب في الصف الحالي (اضغط على الزر لتغيير الحالة بين <strong>✅ أتقن</strong> و <strong>❌ لم يتقن بعد</strong>):
             </p>
             <div class="form-row">
                 <select id="masteryLessonSelect" onchange="renderMasteryTable()" style="font-weight: bold; color: var(--secondary);"></select>
@@ -830,7 +830,7 @@
                             <th>م</th>
                             <th>اسم الطالب</th>
                             <th>الفصل / الشعبة</th>
-                            <th>حالة الإتقان للدرس المختصر</th>
+                            <th>حالة الإتقان للدرس</th>
                         </tr>
                     </thead>
                     <tbody id="masteryTableBody">
