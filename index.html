@@ -239,18 +239,14 @@
             button { width: auto; }
         }
 
-        button:hover { opacity: 0.9; }
-        .btn-danger { background: var(--danger); }
-        .btn-info { background: var(--info); }
-        .btn-warning { background: var(--warning); }
-        .btn-excel { background: var(--excel); }
-        .btn-print { background: #4b5563; }<button class="btn-info" onclick="backupAllData()" style="background: #e11d48; margin-top: 10px; width: 100%;">
-    💾 حفظ نسخة كاملة للبيانات على الجهاز
-</button>
-        .btn-action { padding: 6px 10px; font-size: 12px; margin: 2px; width: auto; }
-<button class="btn-info" onclick="backupAllData()" style="background: #e11d48; margin-top: 10px; width: 100%;">
-    💾 حفظ نسخة كاملة للبيانات على الجهاز
-</button>
+button:hover { opacity: 0.9; }
+.btn-danger { background: var(--danger); }
+.btn-info { background: var(--info); }
+.btn-warning { background: var(--warning); }
+.btn-excel { background: var(--excel); }
+.btn-print { background: #4b5563; }
+.btn-action { padding: 6px 10px; font-size: 12px; margin: 2px; width: auto; }
+
         .counter-cell {
             display: inline-flex;
             align-items: center;
@@ -1082,7 +1078,12 @@
         </div>
 
     </div>
-
+<!-- زر حفظ النسخة الاحتياطية -->
+<div style="text-align: center; margin: 20px 0;">
+    <button class="btn-info" onclick="backupDashboardData()" style="background: #e11d48; padding: 12px 24px; font-size: 15px; border-radius: 8px; cursor: pointer; color: white; border: none;">
+        💾 حفظ نسخة كاملة للداش بورد على الجهاز
+    </button>
+</div>
     <!-- الأزرار العائمة -->
     <div class="floating-action-buttons">
         <a href="https://wa.me/966581015002" target="_blank" class="float-btn float-whatsapp" title="تواصل الدعم الفني عبر واتساب">💬</a>
@@ -2057,24 +2058,24 @@ function toggleMastery(sIdx, lIdx) {
     renderMasteryTable();
     showToast('✅ تم تحديث حالة الإتقان!');
 }// دالة حفظ نسخة احتياطية كاملة لبيانات الداش بورد
-function backupAllData() {
-    const fullBackup = {
+function backupDashboardData() {
+    const dashboardBackup = {
         students: typeof students !== 'undefined' ? students : [],
         lessons: typeof lessons !== 'undefined' ? lessons : [],
+        savedTheme: localStorage.getItem('awwal_math_theme_v4') || 'theme-default',
         timestamp: new Date().toLocaleString('ar-SA')
     };
 
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(fullBackup));
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dashboardBackup));
     const dlAnchor = document.createElement('a');
     dlAnchor.setAttribute("href", dataStr);
-    dlAnchor.setAttribute("download", `نسخة_احتياطية_الداش_بورد_${new Date().toISOString().slice(0,10)}.json`);
+    dlAnchor.setAttribute("download", `نسخة_احتياطية_داش_بورد_الرياضيات_${new Date().toISOString().slice(0,10)}.json`);
     document.body.appendChild(dlAnchor);
     dlAnchor.click();
     dlAnchor.remove();
-    
-    // إذا كانت دالة إظهار التنبيهات موجودة لديك
+
     if (typeof showToast === 'function') {
-        showToast('💾 تم تحميل نسخة احتياطية لكافة بياناتك بنجاح!');
+        showToast('💾 تم تحميل النسخة الاحتياطية لكافة بياناتك بنجاح!');
     } else {
         alert('تم حفظ النسخة الاحتياطية على جهازك بنجاح.');
     }
