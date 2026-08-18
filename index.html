@@ -1083,6 +1083,11 @@ button:hover { opacity: 0.9; }
     <button class="btn-info" onclick="backupDashboardData()" style="background: #e11d48; padding: 12px 24px; font-size: 15px; border-radius: 8px; cursor: pointer; color: white; border: none;">
         💾 حفظ نسخة كاملة للداش بورد على الجهاز
     </button>
+</div><div style="text-align: center; margin: 10px 0;">
+    <input type="file" id="importBackupFile" accept=".json" style="display: none;" onchange="restoreDashboardData(event)">
+    <button class="btn-warning" onclick="document.getElementById('importBackupFile').click()" style="background: #f59e0b; padding: 12px 24px; font-size: 15px; border-radius: 8px; cursor: pointer; color: white; border: none;">
+        📂 استرجاع النسخة الاحتياطية من الجهاز
+    </button>
 </div>
     <!-- الأزرار العائمة -->
     <div class="floating-action-buttons">
@@ -2079,6 +2084,27 @@ function backupDashboardData() {
     } else {
         alert('تم حفظ النسخة الاحتياطية على جهازك بنجاح.');
     }
+}function restoreDashboardData(event) {
+    const file = event.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const imported = JSON.parse(e.target.result);
+            if(imported) {
+                if(imported.students) localStorage.setItem(getStorageKeyForStudents(), JSON.stringify(imported.students));
+                if(imported.lessons) localStorage.setItem(getStorageKeyForLessons(), JSON.stringify(imported.lessons));
+                location.reload(); // تحديث الصفحة لتظهر البيانات المستعادة
+            } else {
+                alert('ملف النسخة الاحتياطية غير صالح.');
+            }
+        } catch(err) {
+            alert('خطأ في قراءة ملف JSON.');
+        } finally {
+            event.target.value = '';
+        }
+    };
+    reader.readAsText(file);
 }
     </script>
 </body>
