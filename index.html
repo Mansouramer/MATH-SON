@@ -586,51 +586,6 @@
             font-weight: bold;
         }
 
-        .searchable-dropdown-container {
-            position: relative;
-            width: 100%;
-        }
-
-        .searchable-input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 16px;
-            background-color: var(--card-bg);
-            color: var(--text);
-            box-sizing: border-box;
-        }
-
-        .searchable-dropdown-list {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            max-height: 220px;
-            overflow-y: auto;
-            background: var(--card-bg);
-            border: 1px solid var(--secondary);
-            border-radius: 0 0 6px 6px;
-            z-index: 999;
-            display: none;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-
-        .searchable-item {
-            padding: 10px 15px;
-            cursor: pointer;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-            transition: background 0.15s;
-            font-size: 14px;
-        }
-
-        .searchable-item:hover {
-            background: rgba(37, 99, 235, 0.1);
-            color: var(--secondary);
-            font-weight: bold;
-        }
-
         .footer-note {
             text-align: center;
             margin-top: 25px;
@@ -677,7 +632,7 @@
         @media print {
             @page { size: A4 landscape; margin: 5mm; }
             body { background: white !important; color: #000 !important; padding: 0 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            .top-banner, .subscription-badge, .theme-switcher, .floating-action-buttons, .toast, .btn-action, .backup-controls, .pagination-bar, .form-row, .classes-query-grid, .no-print, button, select, textarea, .searchable-dropdown-container { display: none !important; }
+            .top-banner, .subscription-badge, .theme-switcher, .floating-action-buttons, .toast, .btn-action, .backup-controls, .pagination-bar, .form-row, .classes-query-grid, .no-print, button, select, textarea { display: none !important; }
             #examsAnalysisBox { display: block !important; visibility: visible !important; background: #f8fafc !important; border: 1px solid #1e3a8a !important; }
             .container { max-width: 100% !important; margin: 0 !important; width: 100% !important; }
             .section-card { box-shadow: none !important; border: 1px solid #ccc !important; page-break-inside: avoid; margin-bottom: 10px !important; padding: 10px !important; background: white !important; }
@@ -688,7 +643,6 @@
             th, td { border: 1px solid #000 !important; padding: 6px !important; color: black !important; }
             th { background-color: #e2e8f0 !important; font-weight: bold !important; }
             .class-badge { background-color: #2563eb !important; color: white !important; border: 1px solid #000; }
-            input[type="number"], input[type="tel"], input[type="text"] { border: none !important; background: transparent !important; color: black !important; font-weight: bold !important; text-align: center !important; display: inline-block !important; visibility: visible !important; }
         }
     </style>
 </head>
@@ -765,7 +719,7 @@
 
         <div class="section-card" id="studentsTableSection">
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 10px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
-                <h3 style="margin: 0; border: none; padding: 0;">✏️ تسجيل الطلاب والصفوف ومتابعة السجل (التعديل بالأسهم)</h3>
+                <h3 style="margin: 0; border: none; padding: 0;">✏️ تسجيل الطلاب والصفوف ومتابعة السجل</h3>
                 <button class="btn-print" onclick="printSection('studentsTableSection')" title="طباعة جدول الطلاب والصفوف">🖨️ طباعة الجدول</button>
             </div>
             
@@ -778,8 +732,7 @@
 
             <div style="margin-top: 15px;">
                 <label style="font-weight: bold; font-size: 13px; display: block; margin-bottom: 5px;">📂 تصفية الطلاب حسب الفصل/الصف:</label>
-                <div id="classesQueryContainer" class="classes-query-grid">
-                    </div>
+                <div id="classesQueryContainer" class="classes-query-grid"></div>
             </div>
 
             <div class="table-responsive print-target">
@@ -798,8 +751,7 @@
                             <th>العمليات / تتبع الإتقان</th>
                         </tr>
                     </thead>
-                    <tbody id="studentsTableBody">
-                        </tbody>
+                    <tbody id="studentsTableBody"></tbody>
                 </table>
             </div>
 
@@ -848,9 +800,7 @@
             <div class="form-row">
                 <textarea id="whatsappMsgTemplate" rows="4" placeholder="اكتب نص الرسالة هنا..." oninput="updateMessagePreview()"></textarea>
             </div>
-            <div class="preview-msg" id="whatsappPreviewBox">
-                معاينة الرسالة ستظهر هنا...
-            </div>
+            <div class="preview-msg" id="whatsappPreviewBox">معاينة الرسالة ستظهر هنا...</div>
             <div class="form-row" style="margin-top: 15px;">
                 <button class="whatsapp-btn" onclick="openBulkWhatsApp()" style="background: #25D366; width: 100%; padding: 14px; font-size: 16px;">
                     📤 إرسال رسائل جماعية للفصل الحالي عبر الواتساب
@@ -870,8 +820,7 @@
                                 <th>إرسال واتساب</th>
                             </tr>
                         </thead>
-                        <tbody id="singleWhatsappTableBody">
-                            </tbody>
+                        <tbody id="singleWhatsappTableBody"></tbody>
                     </table>
                 </div>
             </div>
@@ -886,8 +835,7 @@
                 <div class="form-row">
                     <input type="text" id="lessonSearchInput" placeholder="بحث عن درس أو فصل..." oninput="renderLessons()">
                 </div>
-                <div id="lessonsContainer" class="lessons-grid">
-                    </div>
+                <div id="lessonsContainer" class="lessons-grid"></div>
             </div>
         </div>
 
@@ -927,7 +875,6 @@
     <div class="toast" id="toastNotification">تم الحفظ بنجاح</div>
 
     <script>
-        // قواعد البيانات العامة والمتغيرات
         let currentGrade = "الأول الابتدائي";
         let db = JSON.parse(localStorage.getItem('awwal_math_db_v4')) || {
             "الأول الابتدائي": { students: [], lessons: getDefaultLessons("الأول الابتدائي") },
@@ -1002,7 +949,8 @@
                 participation: 0,
                 homework: 0,
                 absence: 0,
-                projects: 0
+                projects: 0,
+                masteryStatus: "غير مقيّم ❌"
             });
 
             nameInput.value = '';
@@ -1037,8 +985,7 @@
             const student = db[currentGrade].students[globalIdx];
             if(!student) return;
             
-            // تبديل أو فتح حالة الإتقان وسجل مهارات الطالب
-            let currentMastery = student.masteryStatus || "غير محدد";
+            let currentMastery = student.masteryStatus || "غير مقيّم ❌";
             let newStatus = prompt(`تتبع إتقان المهارات للطالب: ${student.name}\nالحالة الحالية: ${currentMastery}\n\nاختر حالة الإتقان:\n1. متقن تماماً ✅\n2. بحاجة لتحسين ⚠️\n3. لم يتم التقييم ❌`, "متقن تماماً");
             
             if(newStatus !== null) {
@@ -1106,13 +1053,11 @@
             const data = db[currentGrade] || { students: [], lessons: [] };
             let students = data.students;
 
-            // تطبيق فلتر الفصل
             let filteredStudents = students;
             if(currentFilterClass !== 'all') {
                 filteredStudents = students.filter(s => (s.classCustom || currentGrade) === currentFilterClass);
             }
 
-            // حساب الإحصائيات العامة
             let totalS = students.length;
             let totSkills = 0, totPart = 0, totHw = 0, totAbs = 0, totProj = 0;
             students.forEach(s => {
@@ -1131,7 +1076,6 @@
             document.getElementById('totalProjects').innerText = totProj;
             document.getElementById('totalMessagesSent').innerText = totalMessagesSentGlobal;
 
-            // مؤشرات الاختبارات
             document.getElementById('statRegistered').innerText = totalS;
             document.getElementById('statTested').innerText = totalS - totAbs;
             document.getElementById('statAbsent').innerText = totAbs;
@@ -1139,7 +1083,6 @@
 
             renderClassesFilter();
 
-            // التصفح والصفحات
             const totalPages = Math.ceil(filteredStudents.length / pageSize) || 1;
             if(currentPage > totalPages) currentPage = totalPages;
             if(currentPage < 1) currentPage = 1;
@@ -1212,7 +1155,6 @@
             renderSingleWhatsAppTable(filteredStudents, students);
         }
 
-        // تحضير الدروس
         function renderLessons() {
             const container = document.getElementById('lessonsContainer');
             if(!container) return;
@@ -1258,7 +1200,6 @@
             }
         }
 
-        // نظام رسائل الواتساب
         function setMsgTemplate(type) {
             let template = "";
             if(type === 'general') {
@@ -1359,7 +1300,6 @@
             });
         }
 
-        // إكسل والنسخ الاحتياطي
         function exportToExcel() {
             const students = db[currentGrade].students;
             if(students.length === 0) {
