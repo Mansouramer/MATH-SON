@@ -246,7 +246,9 @@
         .btn-excel { background: var(--excel); }
         .btn-print { background: #4b5563; }
         .btn-action { padding: 6px 10px; font-size: 12px; margin: 2px; width: auto; }
-
+<button class="btn-info" onclick="backupAllData()" style="background: #e11d48; margin-top: 10px; width: 100%;">
+    💾 حفظ نسخة كاملة للبيانات على الجهاز
+</button>
         .counter-cell {
             display: inline-flex;
             align-items: center;
@@ -2052,6 +2054,28 @@ function toggleMastery(sIdx, lIdx) {
     localStorage.setItem(getStorageKeyForStudents(), JSON.stringify(students));
     renderMasteryTable();
     showToast('✅ تم تحديث حالة الإتقان!');
+}// دالة حفظ نسخة احتياطية كاملة لبيانات الداش بورد
+function backupAllData() {
+    const fullBackup = {
+        students: typeof students !== 'undefined' ? students : [],
+        lessons: typeof lessons !== 'undefined' ? lessons : [],
+        timestamp: new Date().toLocaleString('ar-SA')
+    };
+
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(fullBackup));
+    const dlAnchor = document.createElement('a');
+    dlAnchor.setAttribute("href", dataStr);
+    dlAnchor.setAttribute("download", `نسخة_احتياطية_الداش_بورد_${new Date().toISOString().slice(0,10)}.json`);
+    document.body.appendChild(dlAnchor);
+    dlAnchor.click();
+    dlAnchor.remove();
+    
+    // إذا كانت دالة إظهار التنبيهات موجودة لديك
+    if (typeof showToast === 'function') {
+        showToast('💾 تم تحميل نسخة احتياطية لكافة بياناتك بنجاح!');
+    } else {
+        alert('تم حفظ النسخة الاحتياطية على جهازك بنجاح.');
+    }
 }
     </script>
 </body>
