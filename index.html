@@ -17,7 +17,6 @@
             --warning: #f59e0b;
             --info: #06b6d4;
             --excel: #1d6f42;
-            --success: #10b981;
         }
 
         body.theme-default { 
@@ -245,7 +244,6 @@
         .btn-warning { background: var(--warning); }
         .btn-excel { background: var(--excel); }
         .btn-print { background: #4b5563; }
-        .btn-success { background: var(--success); }
         .btn-action { padding: 6px 10px; font-size: 12px; margin: 2px; width: auto; }
 
         .counter-cell {
@@ -279,35 +277,6 @@
             min-width: 22px;
             text-align: center;
             color: var(--text);
-        }
-
-        /* أزرار حالة الاتقان لكل درس */
-        .mastery-btn {
-            padding: 5px 10px;
-            font-size: 11px;
-            border-radius: 6px;
-            cursor: pointer;
-            border: 1px solid rgba(0,0,0,0.15);
-            font-weight: bold;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            transition: all 0.2s;
-            width: auto;
-        }
-        .mastery-btn.mastered {
-            background-color: #d1fae5;
-            color: #065f46;
-            border-color: #10b981;
-        }
-        .mastery-btn.not-mastered {
-            background-color: #fee2e2;
-            color: #991b1b;
-            border-color: #ef4444;
-        }
-        .mastery-btn:hover {
-            opacity: 0.85;
-            transform: scale(1.05);
         }
 
         .classes-query-grid {
@@ -705,22 +674,21 @@
         .float-whatsapp { background: #25D366; }
         .float-top { background: var(--primary); display: none; }
 
-        /* تخصيص الطباعة بألوان واضحة ومميزة */
         @media print {
-            @page { size: A4 landscape; margin: 10mm; }
+            @page { size: A4 landscape; margin: 5mm; }
             body { background: white !important; color: #000 !important; padding: 0 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
             .top-banner, .subscription-badge, .theme-switcher, .floating-action-buttons, .toast, .btn-action, .backup-controls, .pagination-bar, .form-row, .classes-query-grid, .no-print, button, select, textarea, .searchable-dropdown-container { display: none !important; }
+            #examsAnalysisBox { display: block !important; visibility: visible !important; background: #f8fafc !important; border: 1px solid #1e3a8a !important; }
             .container { max-width: 100% !important; margin: 0 !important; width: 100% !important; }
-            .section-card { box-shadow: none !important; border: 1px solid #1e3a8a !important; page-break-inside: avoid; margin-bottom: 15px !important; padding: 15px !important; background: white !important; }
+            .section-card { box-shadow: none !important; border: 1px solid #ccc !important; page-break-inside: avoid; margin-bottom: 10px !important; padding: 10px !important; background: white !important; }
             body * { visibility: hidden; }
             .print-target, .print-target * { visibility: visible !important; }
             .print-target { position: absolute; left: 0; top: 0; width: 100%; }
             table { width: 100% !important; border-collapse: collapse !important; font-size: 12px !important; }
-            th, td { border: 1px solid #1e3a8a !important; padding: 8px !important; color: black !important; }
-            th { background-color: #dbeafe !important; color: #1e3a8a !important; font-weight: bold !important; }
+            th, td { border: 1px solid #000 !important; padding: 6px !important; color: black !important; }
+            th { background-color: #e2e8f0 !important; font-weight: bold !important; }
             .class-badge { background-color: #2563eb !important; color: white !important; border: 1px solid #000; }
-            .mastery-btn.mastered { background-color: #a7f3d0 !important; color: #065f46 !important; border: 1px solid #059669 !important; -webkit-print-color-adjust: exact !important; }
-            .mastery-btn.not-mastered { background-color: #fecaca !important; color: #991b1b !important; border: 1px solid #dc2626 !important; -webkit-print-color-adjust: exact !important; }
+            input[type="number"], input[type="tel"], input[type="text"] { border: none !important; background: transparent !important; color: black !important; font-weight: bold !important; text-align: center !important; display: inline-block !important; visibility: visible !important; }
         }
     </style>
 </head>
@@ -795,21 +763,49 @@
             </div>
         </div>
 
+        <div class="section-card print-target" id="lessonsMasterySection">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 10px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                <h3 style="margin: 0; border: none; padding: 0;">🎯 تتبع إتقان الدروس لكل طالب (أتقن / لم يتقن)</h3>
+                <button class="btn-print" onclick="printSection('lessonsMasterySection')" title="طباعة سجل إتقان الدروس">🖨️ طباعة سجل الإتقان</button>
+            </div>
+            <p style="font-size: 13px; opacity: 0.85; margin-bottom: 15px;">
+                اختر الدرس أدناه لتحديث حالة إتقان كل طالب في الصف الحالي (اضغط على الزر لتغيير الحالة بين <strong>✅ أتقن</strong> و <strong>❌ لم يتقن</strong>):
+            </p>
+            <div class="form-row">
+                <select id="masteryLessonSelect" onchange="renderMasteryTable()" style="font-weight: bold; color: var(--secondary);"></select>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>م</th>
+                            <th>اسم الطالب</th>
+                            <th>الفصل / الشعبة</th>
+                            <th>حالة الإتقان للدرس المختصر</th>
+                        </tr>
+                    </thead>
+                    <tbody id="masteryTableBody">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+
         <div class="section-card print-target" id="studentsTableSection">
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 10px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
-                <h3 style="margin: 0; border: none; padding: 0;">✏️ تسجيل الطلاب وسجل تتبع الإتقان لكل درس</h3>
-                <button class="btn-print" onclick="printSection('studentsTableSection')" title="طباعة السجل بألوان واضحة">🖨️ طباعة السجل الملون</button>
+                <h3 style="margin: 0; border: none; padding: 0;">✏️ تسجيل الطلاب والصفوف ومتابعة السجل (التعديل بالأسهم)</h3>
+                <button class="btn-print" onclick="printSection('studentsTableSection')" title="طباعة جدول الطلاب والصفوف">🖨️ طباعة الجدول</button>
             </div>
-
-            <div class="form-row no-print">
-                <input type="text" id="studentName" placeholder="اسم الطالب">
-                <input type="text" id="studentClassCustom" placeholder="الفصل (مثال: 1/1)">
-                <input type="tel" id="studentPhone" placeholder="رقم الجوال (9665xxxxxxxx)">
-                <button onclick="addStudent()">➕ إضافة طالب جديد</button>
-            </div>
-
-            <div class="classes-query-grid no-print" id="classesQueryContainer">
+            <div class="form-row">
+                <input type="text" id="studentNameInput" placeholder="اسم الطالب الثلاثي..." onkeydown="if(event.key==='Enter') addStudent()">
+                <div class="searchable-dropdown-container">
+                    <input type="text" id="studentClassInput" class="searchable-input" placeholder="اسم الفصل أو الشعبة (مثال: 1/أ)..." autocomplete="off" onfocus="showClassDropdown()" oninput="filterClassDropdown(this.value)" onblur="hideClassDropdownDelayed()">
+                    <div id="classDropdownList" class="searchable-dropdown-list"></div>
                 </div>
+                <input type="tel" id="studentPhoneInput" placeholder="رقم ولي الأمر (966...)" onkeydown="if(event.key==='Enter') addStudent()">
+                <button onclick="addStudent()" style="background: var(--secondary);">➕ إضافة طالب</button>
+            </div>
+
+            <div id="classesQueryContainer" class="classes-query-grid"></div>
 
             <div class="table-responsive">
                 <table>
@@ -818,115 +814,239 @@
                             <th>م</th>
                             <th>اسم الطالب</th>
                             <th>الفصل</th>
-                            <th>المشاركة</th>
-                            <th>الواجبات</th>
-                            <th>الغياب</th>
-                            <th>التمارين</th>
-                            <th id="dynamicLessonsHeader">إتقان الدروس</th>
-                            <th class="no-print">إجراءات الطالب</th>
+                            <th>رقم ولي الأمر</th>
+                            <th>⭐ المهارات</th>
+                            <th>✋ المشاركات</th>
+                            <th>📚 الواجبات</th>
+                            <th>🔴 الغياب</th>
+                            <th>🛠️ التمارين المساندة</th>
+                            <th>الإجراءات</th>
                         </tr>
                     </thead>
-                    <tbody id="studentsTableBody">
-                        </tbody>
+                    <tbody id="studentsTableBody"></tbody>
                 </table>
             </div>
 
-            <div class="pagination-bar no-print">
-                <div id="paginationInfo" style="font-size: 13px; font-weight: bold;">عرض 0 من 0 طالب</div>
+            <div class="pagination-bar">
+                <div style="display: flex; gap: 8px; align-items: center; width: 100%; max-width: 300px;">
+                    <input type="text" id="searchInput" placeholder="بحث عن طالب..." oninput="render()" style="padding: 8px; font-size: 13px; margin:0;">
+                </div>
                 <div class="pagination-btns">
-                    <button onclick="changePage(-1)">السابق</button>
-                    <span id="pageIndicator" style="font-weight: bold; padding: 0 5px;">1 / 1</span>
-                    <button onclick="changePage(1)">التالي</button>
+                    <button onclick="changePage(-1)" id="prevPageBtn" class="btn-action">السابق</button>
+                    <span id="pageInfo" style="font-size: 13px; font-weight: bold;">صفحة 1 من 1</span>
+                    <button onclick="changePage(1)" id="nextPageBtn" class="btn-action">التالي</button>
                 </div>
             </div>
         </div>
 
-        <div class="section-card no-print">
-            <h3>📚 خطة توزيع المنهج والدروس</h3>
-            <div class="form-row">
-                <input type="text" id="lessonTitle" placeholder="عنوان الدرس الجديد">
-                <input type="text" id="lessonChapter" placeholder="الفصل الدراسي (مثال: الفصل الأول)">
-                <textarea id="lessonDesc" placeholder="نبذة مختصرة عن الدرس..." style="min-width: 100%; height: 40px;"></textarea>
-                <button onclick="addLesson()">➕ إضافة درس للخطة</button>
+        <div class="section-card print-target" id="lessonsSection">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 10px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                <h3 style="margin: 0; border: none; padding: 0;">📚 خطة ومتابعة تنفيذ دروس الرياضيات</h3>
+                <button class="btn-print" onclick="printSection('lessonsSection')" title="طباعة خطة الدروس">🖨️ طباعة الخطة</button>
             </div>
-            <div class="lessons-grid" id="lessonsGrid">
-                </div>
+            <p style="font-size: 13px; opacity: 0.85; margin-bottom: 10px;">اختر الفصل الدراسي لعرض الدروس المقررة وتحديث حالة تنفيذها:</p>
+            <div class="form-row">
+                <select id="lessonTermSelect" onchange="renderLessons()" style="font-weight: bold; color: var(--secondary);">
+                    <option value="الفصل الدراسي الأول">الفصل الدراسي الأول</option>
+                    <option value="الفصل الدراسي الثاني">الفصل الدراسي الثاني</option>
+                    <option value="الفصل الدراسي الثالث">الفصل الدراسي الثالث</option>
+                </select>
+            </div>
+            <div id="lessonsContainer" class="lessons-grid"></div>
         </div>
 
-        <div class="section-card no-print">
-            <h3>💬 إرسال تقارير المتابعة لأولياء الأمور عبر الواتساب</h3>
+        <div class="section-card no-print" id="whatsappSection">
+            <h3>💬 إرسال رسائل المتابعة الجماعية عبر الواتساب</h3>
+            <p style="font-size: 13px; opacity: 0.85;">يمكنك تخصيص رسالة وإرسالها لأولياء أمور الطلاب في الصف أو الفصل الحالي بضغطة زر:</p>
             <div class="form-row">
-                <select id="msgTemplateSelect" onchange="updateMsgTemplateText()">
-                    <option value="default">رسالة عامة (المستوى، الغياب، الواجبات)</option>
-                    <option value="mastery">رسالة حالة إتقان الدروس والمهارات</option>
-                    <option value="absence">رسالة تنبيه الغياب والمتابعة</option>
+                <select id="whatsappTargetSelect" onchange="updateMessagePreview()">
+                    <option value="all">جميع طلاب الصف الحالي</option>
+                    <option value="missing_homework">الطلاب الذين لديهم قصور في الواجبات</option>
+                    <option value="absent_students">الطلاب الذين لديهم غياب</option>
                 </select>
             </div>
             <div class="form-row">
-                <textarea id="msgTemplateText" style="min-height: 90px;"></textarea>
-            </div>
-            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                <button class="btn-success" onclick="sendToAllFilteredStudents()">📤 إرسال لجميع طلاب الفصل الحالي</button>
+                <textarea id="whatsappTemplateInput" rows="4" oninput="updateMessagePreview()">نحيطكم علماً بمستوى ابنكم البار وندعوكم لمتابعة تحصيله الدراسي ومهارات الرياضيات معنا في مدرسة داوود.</textarea>
             </div>
             <div class="sub-box">
-                <h5> معاينة الرسالة الجاهزة للإرسال:</h5>
-                <div class="preview-msg" id="msgPreviewBox"></div>
+                <h5>معاينة الرسالة المتغيرة:</h5>
+                <div id="whatsappMessagePreview" class="preview-msg"></div>
+            </div>
+            <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                <button onclick="sendBulkWhatsApp()" class="whatsapp-btn" style="flex:1;">📤 إرسال جماعي عبر الواتساب</button>
+            </div>
+        </div>
+
+        <div class="section-card print-target" id="examsAnalysisBox">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 10px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                <h3 style="margin: 0; border: none; padding: 0;">📊 مؤشرات التحليل الإحصائي لنتائج الطلاب</h3>
+                <button class="btn-print" onclick="printSection('examsAnalysisBox')" title="طباعة التحليل الإحصائي">🖨️ طباعة التحليل</button>
+            </div>
+            <div class="student-details">
+                <div class="detail-item">
+                    <span>إجمالي المهارات المرصودة</span>
+                    <strong id="statSkillsCount">0</strong>
+                </div>
+                <div class="detail-item">
+                    <span>متوسط المشاركات للطالب</span>
+                    <strong id="statAvgParticipation">0.0</strong>
+                </div>
+                <div class="detail-item">
+                    <span>إجمالي الواجبات المسلمة</span>
+                    <strong id="statTotalHw">0</strong>
+                </div>
+                <div class="detail-item">
+                    <span>إجمالي الغياب المسجل</span>
+                    <strong id="statTotalAbs">0</strong>
+                </div>
             </div>
         </div>
 
         <div class="section-card no-print">
-            <h3>💾 إدارة وحفظ البيانات (نسخ احتياطي واستيراد)</h3>
+            <h3>💾 النسخ الاحتياطي وإدارة البيانات</h3>
+            <p style="font-size: 13px; opacity: 0.85;">قم بحفظ نسخة احتياطية من بيانات طلابك ودروسك أو استعادة نسخة سابقة بسهولة:</p>
             <div class="backup-controls">
-                <button class="btn-excel" onclick="exportToExcel()">📊 تصدير إلى ملف إكسل Excel</button>
-                <button onclick="exportJSONBackup()">📥 حفظ نسخة احتياطية (JSON)</button>
-                <button class="btn-warning" onclick="document.getElementById('importFileJson').click()">📂 استعادة نسخة احتياطية</button>
-                <input type="file" id="importFileJson" style="display:none" accept=".json" onchange="importJSONBackup(event)">
-                <button class="btn-danger" onclick="resetAllData()">🗑️ مسح كافة البيانات</button>
+                <button onclick="exportToExcel()" class="btn-excel">📥 تصدير البيانات إلى إكسل</button>
+                <button onclick="exportBackup()" class="btn-info">💾 حفظ نسخة احتياطية (JSON)</button>
+                <button onclick="triggerImportBackup()" class="btn-warning">📂 استعادة نسخة احتياطية</button>
+                <input type="file" id="importFile" style="display:none" accept=".json" onchange="importBackup(event)">
+                <button onclick="clearAllData()" class="btn-danger">🗑️ حذف كافة البيانات</button>
             </div>
         </div>
 
-        <div class="footer-note no-print">
-            جميع الحقوق محفوظة © لوحة تحكم مادة الرياضيات - مدرسة داوود | إعداد المعلم: منصور عامر الرحيلي
+        <div class="footer-note">
+            جميع الحقوق محفوظة © 2026 مدرسة داوود | لوحة تحكم معلم الرياضيات - إعداد: منصور عامر الرحيلي
         </div>
     </div>
 
     <div class="floating-action-buttons no-print">
         <a href="https://wa.me/966581015002" target="_blank" class="float-btn float-whatsapp" title="تواصل واتساب">💬</a>
-        <button class="float-btn float-top" id="scrollTopBtn" onclick="window.scrollTo({top:0, behavior:'smooth'})" title="الاعلى">⬆️</button>
+        <button class="float-btn float-top" id="scrollTopBtn" onclick="window.scrollTo({top:0, behavior:'smooth'})" title="للأعلى">⬆️</button>
     </div>
 
-    <div class="toast" id="toastNotification">تم الحفظ بنجاح</div>
+    <div id="toast" class="toast">تمت العملية بنجاح</div>
 
     <script>
         let currentGrade = "الأول الابتدائي";
-        let students = JSON.parse(localStorage.getItem('awwal_math_students_v4')) || [];
-        let lessons = JSON.parse(localStorage.getItem('awwal_math_lessons_v4')) || getDefaultLessons();
-        let messageCounts = JSON.parse(localStorage.getItem('awwal_math_msg_counts_v4')) || {};
-        let currentClassFilter = "الكل";
+        let currentClassFilter = "all";
         let currentPage = 1;
         const pageSize = 10;
+        let messagesSentCount = 0;
 
-        function getDefaultLessons() {
-            return [
-                { id: 1, title: "الدرس الأول: المقارنة التصنيفية والعد", chapter: "الفصل 1", desc: "استكشاف خصائص الأشياء والعد التصاعدي.", executed: true },
-                { id: 2, title: "الدرس الثاني: قراءة الاعداد وكتابتها (1, 2, 3)", chapter: "الفصل 1", desc: "التمثيل السليم وكتابة الأرقام.", executed: true },
-                { id: 3, title: "الدرس الثالث: قراءة وكتابة الأعداد (4, 5)", chapter: "الفصل 1", desc: "العد المتقدم وتحديد الكميات.", executed: false },
-                { id: 4, title: "الدرس الرابع: احل المسألة (أبحث عن نمط)", chapter: "الفصل 1", desc: "اكتشاف الأنماط البصرية والعدديّة.", executed: false }
-            ];
+        // مصفوفة بيانات الدروس الأساسية (المنهج السعودي)
+        const curriculumData = {
+            "الأول الابتدائي": {
+                "الفصل الدراسي الأول": [
+                    { id: "g1_t1_1", ch: "الفصل 1", title: "الدرس 1: المقارنة التصنيف وفق خاصية واحدة" },
+                    { id: "g1_t1_2", ch: "الفصل 1", title: "الدرس 2: التصنيف وفق أكثر من خاصية" },
+                    { id: "g1_t1_3", ch: "الفصل 1", title: "الدرس 3: يساوي - أكثر من - أقل من" },
+                    { id: "g1_t2_1", ch: "الفصل 2", title: "الدرس 1: الأعداد 1، 2، 3" },
+                    { id: "g1_t2_2", ch: "الفصل 2", title: "الدرس 2: قراءة الأعداد 1، 2، 3 وكتابتها" },
+                    { id: "g1_t2_3", ch: "الفصل 2", title: "الدرس 3: العددان 4، 5" }
+                ],
+                "الفصل الدراسي الثاني": [
+                    { id: "g1_t2_4", ch: "الفصل 3", title: "الدرس 1: أحل المسألة (أمثلها)" },
+                    { id: "g1_t2_5", ch: "الفصل 3", title: "الدرس 2: قراءة العددين 6، 7 وكتابتهما" },
+                    { id: "g1_t2_6", ch: "الفصل 3", title: "الدرس 3: العدد 8" }
+                ],
+                "الفصل الدراسي الثالث": [
+                    { id: "g1_t3_1", ch: "الفصل 7", title: "الدرس 1: الآحاد والعشرات" },
+                    { id: "g1_t3_2", ch: "الفصل 7", title: "الدرس 2: أحاد الأعداد حتى 50" },
+                    { id: "g1_t3_3", ch: "الفصل 8", title: "الدرس 1: أطوال الأضواء والقياس" }
+                ]
+            },
+            "الثاني الابتدائي": {
+                "الفصل الدراسي الأول": [
+                    { id: "g2_t1_1", ch: "الفصل 1", title: "الدرس 1: القيمة المنزلية ضمن المئات" },
+                    { id: "g2_t1_2", ch: "الفصل 1", title: "الدرس 2: الآحاد والعشرات والمئات" },
+                    { id: "g2_t1_3", ch: "الفصل 1", title: "الدرس 3: القياس والأطوال" }
+                ],
+                "الفصل الدراسي الثاني": [
+                    { id: "g2_t2_1", ch: "الفصل 4", title: "الدرس 1: جمع العشرات" },
+                    { id: "g2_t2_2", ch: "الفصل 4", title: "الدرس 2: الجمع بإعادة التجميع" }
+                ],
+                "الفصل الدراسي الثالث": [
+                    { id: "g2_t3_1", ch: "الفصل 7", title: "الدرس 1: الكسور وقارنتها" },
+                    { id: "g2_t3_2", ch: "الفصل 8", title: "الدرس 2: الاشكال الهندسية" }
+                ]
+            },
+            "الثالث الابتدائي": {
+                "الفصل الدراسي الأول": [
+                    { id: "g3_t1_1", ch: "الفصل 1", title: "الدرس 1: الجبر (الأنماط العددية)" },
+                    { id: "g3_t1_2", ch: "الفصل 1", title: "الدرس 2: خصائص الجمع" }
+                ],
+                "الفصل الدراسي الثاني": [
+                    { id: "g3_t2_1", ch: "الفصل 4", title: "الدرس 1: الضرب في عدد واحد" },
+                    { id: "g3_t2_2", ch: "الفصل 4", title: "الدرس 2: الضرب في أعداد عشرية" }
+                ],
+                "الفصل الدراسي الثالث": [
+                    { id: "g3_t3_1", ch: "الفصل 7", title: "الدرس 1: القسمة كناتج توزيع" },
+                    { id: "g3_t3_2", ch: "الفصل 8", title: "الدرس 2: وحدات القياس الزمنية" }
+                ]
+            },
+            "الرابع الابتدائي": {
+                "الفصل الدراسي الأول": [
+                    { id: "g4_t1_1", ch: "الفصل 1", title: "الدرس 1: القيم المنزلية ضمن الملايين" },
+                    { id: "g4_t1_2", ch: "الفصل 1", title: "الدرس 2: مقارنة الأعداد وترتيبها" }
+                ],
+                "الفصل الدراسي الثاني": [
+                    { id: "g4_t2_1", ch: "الفصل 4", title: "الدرس 1: ضرب عدد في رقم واحد" },
+                    { id: "g4_t2_2", ch: "الفصل 4", title: "الدرس 2: تقدير ناتج الضرب" }
+                ],
+                "الفصل الدراسي الثالث": [
+                    { id: "g4_t3_1", ch: "الفصل 7", title: "الدرس 1: الكسور الاعتيادية" },
+                    { id: "g4_t3_2", ch: "الفصل 8", title: "الدرس 2: الكسور العشرية" }
+                ]
+            },
+            "الخامس الابتدائي": {
+                "الفصل الدراسي الأول": [
+                    { id: "g5_t1_1", ch: "الفصل 1", title: "الدرس 1: خطة حل المسألة (التخمين والتحقق)" },
+                    { id: "g5_t1_2", ch: "الفصل 1", title: "الدرس 2: القيمة المنزلية ضمن أجزاء من الألف" }
+                ],
+                "الفصل الدراسي الثاني": [
+                    { id: "g5_t2_1", ch: "الفصل 4", title: "الدرس 1: العوامل والمضاعفات" },
+                    { id: "g5_t2_2", ch: "الفصل 4", title: "الدرس 2: قواسم الأعداد" }
+                ],
+                "الفصل الدراسي الثالث": [
+                    { id: "g5_t3_1", ch: "الفصل 7", title: "الدرس 1: جمع الكسور المتشابهة" },
+                    { id: "g5_t3_2", ch: "الفصل 8", title: "الدرس 2: القياس والمحيط والمساحة" }
+                ]
+            },
+            "السادس الابتدائي": {
+                "الفصل الدراسي الأول": [
+                    { id: "g6_t1_1", ch: "الفصل 1", title: "الدرس 1: الجبر والدوال" },
+                    { id: "g6_t1_2", ch: "الفصل 1", title: "الدرس 2: العبارات الجبرية" }
+                ],
+                "الفصل الدراسي الثاني": [
+                    { id: "g6_t2_1", ch: "الفصل 4", title: "الدرس 1: النسبة والتناسب" },
+                    { id: "g6_t2_2", ch: "الفصل 4", title: "الدرس 2: معدل الوحدة" }
+                ],
+                "الفصل الدراسي الثالث": [
+                    { id: "g6_t3_1", ch: "الفصل 7", title: "الدرس 1: الاحتمالات والكسور" },
+                    { id: "g6_t3_2", ch: "الفصل 8", title: "الدرس 2: المساحات والحجوم" }
+                ]
+            }
+        };
+
+        // استرجاع البيانات من التخزين المحلي أو إنشاء قاعدة بيانات افتراضية
+        let db = JSON.parse(localStorage.getItem('awwal_math_db_v4')) || {
+            students: [
+                { name: "أحمد محمد العتيبي", grade: "الأول الابتدائي", classCustom: "1/أ", phone: "966500000001", skills: 8, participation: 5, homework: 4, absence: 0, projects: 3, mastery: {} },
+                { name: "خالد سعيد الغامدي", grade: "الأول الابتدائي", classCustom: "1/أ", phone: "966500000002", skills: 7, participation: 3, homework: 3, absence: 1, projects: 2, mastery: {} },
+                { name: "بندر عبدالله الشهري", grade: "الأول الابتدائي", classCustom: "1/ب", phone: "966500000003", skills: 9, participation: 6, homework: 5, absence: 0, projects: 4, mastery: {} }
+            ],
+            lessonsStatus: {}
+        };
+
+        function saveDB() {
+            localStorage.setItem('awwal_math_db_v4', JSON.stringify(db));
         }
 
         function showToast(msg) {
-            const t = document.getElementById('toastNotification');
+            const t = document.getElementById('toast');
             t.innerText = msg;
             t.style.display = 'block';
             setTimeout(() => { t.style.display = 'none'; }, 2500);
-        }
-
-        function saveData() {
-            localStorage.setItem('awwal_math_students_v4', JSON.stringify(students));
-            localStorage.setItem('awwal_math_lessons_v4', JSON.stringify(lessons));
-            localStorage.setItem('awwal_math_msg_counts_v4', JSON.stringify(messageCounts));
-            render();
         }
 
         function setTheme(themeName) {
@@ -938,434 +1058,535 @@
         if(savedTheme) document.body.className = savedTheme;
 
         window.onload = function() {
-            const gradeSel = document.getElementById('globalGradeSelect');
-            if(gradeSel) gradeSel.value = currentGrade;
-            updateMsgTemplateText();
+            populateMasteryLessonSelect();
             renderLessons();
             render();
+            updateMessagePreview();
         };
 
-        function changeGradeLevel(val) {
-            currentGrade = val;
-            currentClassFilter = "الكل";
+        window.onscroll = function() {
+            const btn = document.getElementById('scrollTopBtn');
+            if(window.scrollY > 300) {
+                btn.style.display = 'flex';
+            } else {
+                btn.style.display = 'none';
+            }
+        };
+
+        function changeGradeLevel(grade) {
+            currentGrade = grade;
+            currentClassFilter = "all";
             currentPage = 1;
+            populateMasteryLessonSelect();
+            renderLessons();
             render();
-            showToast("تم الانتقال إلى: " + val);
+            showToast("تم الانتقال إلى: " + grade);
         }
 
-        function addStudent() {
-            const nameInput = document.getElementById('studentName');
-            const classInput = document.getElementById('studentClassCustom');
-            const phoneInput = document.getElementById('studentPhone');
-            
-            if(!nameInput.value.trim()) {
-                alert("الرجاء إدخال اسم الطالب");
+        // إدارة الفصول المتاحة للقائمة المنسدلة الذكية
+        function getAvailableClassesForGrade() {
+            const classesSet = new Set();
+            db.students.forEach(s => {
+                if(s.grade === currentGrade && s.classCustom) {
+                    classesSet.add(s.classCustom);
+                }
+            });
+            if(classesSet.size === 0) classesSet.add("1/أ");
+            return Array.from(classesSet);
+        }
+
+        function showClassDropdown() {
+            const list = document.getElementById('classDropdownList');
+            const classes = getAvailableClassesForGrade();
+            let html = '';
+            classes.forEach(c => {
+                html += `<div class="searchable-item" onclick="selectClassOption('${c}')">${c}</div>`;
+            });
+            list.innerHTML = html;
+            list.style.display = 'block';
+        }
+
+        function filterClassDropdown(query) {
+            const list = document.getElementById('classDropdownList');
+            const classes = getAvailableClassesForGrade();
+            const filtered = classes.filter(c => c.includes(query));
+            let html = '';
+            if(filtered.length > 0) {
+                filtered.forEach(c => {
+                    html += `<div class="searchable-item" onclick="selectClassOption('${c}')">${c}</div>`;
+                });
+            } else {
+                html += `<div class="searchable-item" onclick="selectClassOption('${query}')">إضافة شعبة جديدة: ${query}</div>`;
+            }
+            list.innerHTML = html;
+            list.style.display = 'block';
+        }
+
+        function selectClassOption(val) {
+            document.getElementById('studentClassInput').value = val;
+            document.getElementById('classDropdownList').style.display = 'none';
+        }
+
+        function hideClassDropdownDelayed() {
+            setTimeout(() => {
+                const list = document.getElementById('classDropdownList');
+                if(list) list.style.display = 'none';
+            }, 250);
+        }
+
+        // دوال نظام تتقع إتقان الدروس (أتقن / لم يتقن)
+        function populateMasteryLessonSelect() {
+            const select = document.getElementById('masteryLessonSelect');
+            if(!select) return;
+            const terms = curriculumData[currentGrade] || {};
+            let html = '';
+            for(let term in terms) {
+                terms[term].forEach(lesson => {
+                    html += `<option value="${lesson.id}">[${term}] ${lesson.title}</option>`;
+                });
+            }
+            select.innerHTML = html;
+            renderMasteryTable();
+        }
+
+        function renderMasteryTable() {
+            const tbody = document.getElementById('masteryTableBody');
+            const lessonId = document.getElementById('masteryLessonSelect').value;
+            if(!tbody || !lessonId) return;
+
+            const studentsInGrade = db.students.filter(s => s.grade === currentGrade);
+            let html = '';
+
+            if(studentsInGrade.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:15px; opacity:0.7;">لا توجد طلاب مسجلين في هذا الصف حالياً</td></tr>`;
                 return;
             }
 
-            const newStudent = {
-                name: nameInput.value.trim(),
+            studentsInGrade.forEach((s, idx) => {
+                const globalIdx = db.students.indexOf(s);
+                if(!s.mastery) s.mastery = {};
+                const isMastered = s.mastery[lessonId] === true;
+
+                html += `
+                    <tr>
+                        <td>${idx + 1}</td>
+                        <td><strong>${s.name}</strong></td>
+                        <td><span class="class-badge">${s.classCustom || currentGrade}</span></td>
+                        <td>
+                            <button class="status-toggle-btn ${isMastered ? 'done' : 'pending'}" onclick="toggleStudentMastery(${globalIdx}, '${lessonId}')">
+                                ${isMastered ? '✅ أتقن المهارة' : '❌ لم يتقن بعد'}
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+        }
+
+        function toggleStudentMastery(globalIdx, lessonId) {
+            if(!db.students[globalIdx].mastery) {
+                db.students[globalIdx].mastery = {};
+            }
+            db.students[globalIdx].mastery[lessonId] = !db.students[globalIdx].mastery[lessonId];
+            saveDB();
+            renderMasteryTable();
+            showToast("تم تحديث حالة إتقان الطالب");
+        }
+
+        // إدارة الطلاب
+        function addStudent() {
+            const nameInput = document.getElementById('studentNameInput');
+            const classInput = document.getElementById('studentClassInput');
+            const phoneInput = document.getElementById('studentPhoneInput');
+
+            const name = nameInput.value.trim();
+            const classCustom = classInput.value.trim() || "1/أ";
+            let phone = phoneInput.value.trim();
+
+            if(!name) {
+                showToast("الرجاء إدخال اسم الطالب ثلاثياً");
+                nameInput.focus();
+                return;
+            }
+
+            if(phone && !phone.startsWith('966')) {
+                if(phone.startsWith('0')) phone = '966' + phone.substring(1);
+                else phone = '966' + phone;
+            }
+
+            db.students.push({
+                name: name,
                 grade: currentGrade,
-                classCustom: classInput.value.trim() || currentGrade,
-                phone: phoneInput.value.trim(),
+                classCustom: classCustom,
+                phone: phone,
+                skills: 0,
                 participation: 0,
                 homework: 0,
                 absence: 0,
                 projects: 0,
-                mastery: {} // تخزين إتقان كل درس: { lessonId: true/false }
-            };
+                mastery: {}
+            });
 
-            students.push(newStudent);
+            saveDB();
             nameInput.value = '';
-            classInput.value = '';
             phoneInput.value = '';
-            currentPage = 1;
-            saveData();
-            showToast("تم إضافة الطالب بنجاح");
+            nameInput.focus();
+            render();
+            renderMasteryTable();
+            showToast("تمت إضافة الطالب بنجاح");
         }
 
-        function updateCounter(index, field, delta) {
-            students[index][field] = Math.max(0, (students[index][field] || 0) + delta);
-            saveData();
-        }
-
-        // تبديل حالة إتقان الدرس للطالب (متقن / غير متقن)
-        function toggleMastery(studentIndex, lessonId) {
-            if(!students[studentIndex].mastery) {
-                students[studentIndex].mastery = {};
-            }
-            const currentState = students[studentIndex].mastery[lessonId];
-            // إذا كان غير محدد أو غير متقن يتحول إلى متقن، والعكس
-            students[studentIndex].mastery[lessonId] = !currentState;
-            saveData();
-        }
-
-        function deleteStudent(index) {
+        function deleteStudent(globalIdx) {
             if(confirm("هل أنت متأكد من حذف هذا الطالب نهائياً؟")) {
-                students.splice(index, 1);
-                saveData();
+                db.students.splice(globalIdx, 1);
+                saveDB();
+                render();
+                renderMasteryTable();
                 showToast("تم حذف الطالب");
             }
         }
 
-        function renderClassesFilter(gradeStudents) {
+        function updateStudentVal(globalIdx, field, delta) {
+            db.students[globalIdx][field] = Math.max(0, db.students[globalIdx][field] + delta);
+            saveDB();
+            render();
+        }
+
+        function renderClassesQueryButtons() {
             const container = document.getElementById('classesQueryContainer');
+            if(!container) return;
+
             const classesSet = new Set();
-            gradeStudents.forEach(s => classesSet.add(s.classCustom || currentGrade));
+            db.students.forEach(s => {
+                if(s.grade === currentGrade) classesSet.add(s.classCustom || "عام");
+            });
 
             let html = `
-                <div class="class-btn-wrapper ${currentClassFilter === 'الكل' ? 'active' : ''}">
-                    <button class="class-query-btn" onclick="filterClass('الكل')">📋 الكل (${gradeStudents.length})</button>
+                <div class="class-btn-wrapper ${currentClassFilter === 'all' ? 'active' : ''}">
+                    <button class="class-query-btn" onclick="filterByClass('all')">📚 كافة فصول الصف</button>
                 </div>
             `;
 
-            classesSet.forEach(cls => {
-                const count = gradeStudents.filter(s => (s.classCustom || currentGrade) === cls).length;
+            classesSet.forEach(c => {
+                const isActive = currentClassFilter === c ? 'active' : '';
                 html += `
-                    <div class="class-btn-wrapper ${currentClassFilter === cls ? 'active' : ''}">
-                        <button class="class-query-btn" onclick="filterClass('${cls}')">🏫 ${cls} (${count})</button>
-                        <button class="class-delete-btn" onclick="deleteClassGroup('${cls}')" title="حذف الفصل">🗑️</button>
+                    <div class="class-btn-wrapper ${isActive}">
+                        <button class="class-query-btn" onclick="filterByClass('${c}')">📁 فصل: ${c}</button>
+                        <button class="class-delete-btn" onclick="deleteClassGroup('${c}')" title="حذف الفصل">🗑️</button>
                     </div>
                 `;
             });
             container.innerHTML = html;
         }
 
-        function filterClass(cls) {
-            currentClassFilter = cls;
+        function filterByClass(className) {
+            currentClassFilter = className;
             currentPage = 1;
             render();
         }
 
-        function deleteClassGroup(cls) {
-            if(confirm(`هل أنت متأكد من حذف فصل "${cls}" وجميع طلابه؟`)) {
-                students = students.filter(s => !(s.grade === currentGrade && (s.classCustom || currentGrade) === cls));
-                currentClassFilter = "الكل";
-                saveData();
-                showToast("تم حذف الفصل بنجاح");
+        function deleteClassGroup(className) {
+            if(confirm(`هل أنت متأكد من حذف فصل "${className}" وجميع الطلاب التابعين له؟`)) {
+                db.students = db.students.filter(s => !(s.grade === currentGrade && (s.classCustom || "عام") === className));
+                currentClassFilter = 'all';
+                saveDB();
+                render();
+                renderMasteryTable();
+                showToast("تم حذف الفصل");
             }
         }
 
-        function changePage(dir) {
-            currentPage += dir;
+        function changePage(direction) {
+            currentPage += direction;
             render();
         }
 
+        // العرض الرئيسي لجدول الطلاب والتحليلات
         function render() {
-            const gradeStudents = students.filter(s => s.grade === currentGrade);
-            renderClassesFilter(gradeStudents);
+            renderClassesQueryButtons();
 
-            let filtered = gradeStudents;
-            if(currentClassFilter !== "الكل") {
-                filtered = gradeStudents.filter(s => (s.classCustom || currentGrade) === currentClassFilter);
-            }
+            const searchInput = document.getElementById('searchInput');
+            const searchVal = searchInput ? searchInput.value.toLowerCase() : "";
 
-            const totalPages = Math.ceil(filtered.length / pageSize) || 1;
+            let filteredStudents = db.students.filter(s => {
+                const matchGrade = s.grade === currentGrade;
+                const matchClass = currentClassFilter === 'all' || (s.classCustom || "عام") === currentClassFilter;
+                const matchSearch = s.name.toLowerCase().includes(searchVal) || (s.phone && s.phone.includes(searchVal));
+                return matchGrade && matchClass && matchSearch;
+            });
+
+            const totalPages = Math.ceil(filteredStudents.length / pageSize) || 1;
             if(currentPage > totalPages) currentPage = totalPages;
             if(currentPage < 1) currentPage = 1;
 
             const startIdx = (currentPage - 1) * pageSize;
-            const paginatedStudents = filtered.slice(startIdx, startIdx + pageSize);
+            const paginatedStudents = filteredStudents.slice(startIdx, startIdx + pageSize);
 
             const tbody = document.getElementById('studentsTableBody');
-            
-            // تحديث عناوين أعمدة الدروس في الجدول
-            const headerRow = document.getElementById('dynamicLessonsHeader');
-            let lessonThHtml = `<th>إتقان الدروس</th>`;
-            // إذا أردنا عرض كل درس كعمود أو قائمة مدمجة، سنعرض أزرار الإتقان لكل درس بشكل احترافي
-            
-            let html = "";
-            paginatedStudents.forEach((s, idx) => {
-                const globalIdx = students.indexOf(s);
-                
-                // بناء أزرار تتبع إتقان الدروس لكل طالب
-                let masteryHtml = `<div style="display:flex; gap:4px; flex-wrap:wrap; justify-content:center; max-width:250px;">`;
-                lessons.forEach((l, lIdx) => {
-                    const isMastered = s.mastery && s.mastery[l.id] === true;
-                    const btnClass = isMastered ? "mastered" : "not-mastered";
-                    const btnText = isMastered ? `✅ د${lIdx+1}` : `❌ د${lIdx+1}`;
-                    const btnTitle = `${l.title}: ${isMastered ? 'متقن' : 'غير متقن'}`;
-                    masteryHtml += `<button class="mastery-btn ${btnClass}" title="${btnTitle}" onclick="toggleMastery(${globalIdx}, ${l.id})">${btnText}</button>`;
-                });
-                masteryHtml += `</div>`;
-
-                html += `
-                    <tr>
-                        <td>${startIdx + idx + 1}</td>
-                        <td><strong>${s.name}</strong></td>
-                        <td><span class="class-badge">${s.classCustom || currentGrade}</span></td>
-                        <td>
-                            <div class="counter-cell">
-                                <button class="counter-btn" onclick="updateCounter(${globalIdx}, 'participation', -1)">-</button>
-                                <span class="counter-value">${s.participation || 0}</span>
-                                <button class="counter-btn" onclick="updateCounter(${globalIdx}, 'participation', 1)">+</button>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="counter-cell">
-                                <button class="counter-btn" onclick="updateCounter(${globalIdx}, 'homework', -1)">-</button>
-                                <span class="counter-value">${s.homework || 0}</span>
-                                <button class="counter-btn" onclick="updateCounter(${globalIdx}, 'homework', 1)">+</button>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="counter-cell">
-                                <button class="counter-btn" onclick="updateCounter(${globalIdx}, 'absence', -1)">-</button>
-                                <span class="counter-value">${s.absence || 0}</span>
-                                <button class="counter-btn" onclick="updateCounter(${globalIdx}, 'absence', 1)">+</button>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="counter-cell">
-                                <button class="counter-btn" onclick="updateCounter(${globalIdx}, 'projects', -1)">-</button>
-                                <span class="counter-value">${s.projects || 0}</span>
-                                <button class="counter-btn" onclick="updateCounter(${globalIdx}, 'projects', 1)">+</button>
-                            </div>
-                        </td>
-                        <td>${masteryHtml}</td>
-                        <td class="no-print">
-                            <div class="action-cell-container">
-                                ${s.phone ? `<a href="https://wa.me/${s.phone}?text=${encodeURIComponent(generateStudentMsg(s))}" target="_blank" class="whatsapp-btn" onclick="incrementMsgCount('${s.name}')">📤 واتساب</a>` : '<span style="font-size:11px; opacity:0.5;">لا جوال</span>'}
-                                <button class="btn-action btn-danger" onclick="deleteStudent(${globalIdx})">حذف</button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            });
+            let html = '';
 
             if(paginatedStudents.length === 0) {
-                html = `<tr><td colspan="9" style="padding:20px; text-align:center; opacity:0.6;">لا توجد بيانات طلاب مسجلة في هذا الصف</td></tr>`;
+                html = `<tr><td colspan="10" style="text-align:center; padding:20px; opacity:0.7;">لا توجد بيانات طلاب مطابقة للبحث أو الفلتر الحالي</td></tr>`;
+            } else {
+                paginatedStudents.forEach((s) => {
+                    const globalIdx = db.students.indexOf(s);
+                    html += `
+                        <tr>
+                            <td>${globalIdx + 1}</td>
+                            <td><strong>${s.name}</strong></td>
+                            <td><span class="class-badge">${s.classCustom || currentGrade}</span></td>
+                            <td>${s.phone ? `<a href="https://wa.me/${s.phone}" target="_blank" style="color:var(--secondary); text-decoration:underline; font-weight:bold;">${s.phone}</a>` : '<span style="opacity:0.4;">لا يوجد</span>'}</td>
+                            <td>
+                                <div class="counter-cell">
+                                    <button class="counter-btn" onclick="updateStudentVal(${globalIdx}, 'skills', -1)">-</button>
+                                    <span class="counter-value">${s.skills}</span>
+                                    <button class="counter-btn" onclick="updateStudentVal(${globalIdx}, 'skills', 1)">+</button>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="counter-cell">
+                                    <button class="counter-btn" onclick="updateStudentVal(${globalIdx}, 'participation', -1)">-</button>
+                                    <span class="counter-value">${s.participation}</span>
+                                    <button class="counter-btn" onclick="updateStudentVal(${globalIdx}, 'participation', 1)">+</button>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="counter-cell">
+                                    <button class="counter-btn" onclick="updateStudentVal(${globalIdx}, 'homework', -1)">-</button>
+                                    <span class="counter-value">${s.homework}</span>
+                                    <button class="counter-btn" onclick="updateStudentVal(${globalIdx}, 'homework', 1)">+</button>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="counter-cell">
+                                    <button class="counter-btn" onclick="updateStudentVal(${globalIdx}, 'absence', -1)">-</button>
+                                    <span class="counter-value">${s.absence}</span>
+                                    <button class="counter-btn" onclick="updateStudentVal(${globalIdx}, 'absence', 1)">+</button>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="counter-cell">
+                                    <button class="counter-btn" onclick="updateStudentVal(${globalIdx}, 'projects', -1)">-</button>
+                                    <span class="counter-value">${s.projects}</span>
+                                    <button class="counter-btn" onclick="updateStudentVal(${globalIdx}, 'projects', 1)">+</button>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="action-cell-container">
+                                    <button class="btn-action btn-danger" onclick="deleteStudent(${globalIdx})">حذف</button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
             }
-
             tbody.innerHTML = html;
 
-            document.getElementById('paginationInfo').innerText = `عرض ${paginatedStudents.length} من إجمالي ${filtered.length} طالب`;
-            document.getElementById('pageIndicator').innerText = `${currentPage} / ${totalPages}`;
+            document.getElementById('pageInfo').innerText = `صفحة ${currentPage} من ${totalPages}`;
+            document.getElementById('prevPageBtn').disabled = currentPage === 1;
+            document.getElementById('nextPageBtn').disabled = currentPage === totalPages;
 
-            // تحديث الإحصائيات العامة
-            let totPart = 0, totHw = 0, totAbs = 0, totProj = 0;
-            gradeStudents.forEach(s => {
-                totPart += (s.participation || 0);
-                totHw += (s.homework || 0);
-                totAbs += (s.absence || 0);
-                totProj += (s.projects || 0);
+            updateGlobalStats();
+        }
+
+        // إحصائيات لوحة التحكم
+        function updateGlobalStats() {
+            const studentsInGrade = db.students.filter(s => s.grade === currentGrade);
+            let tSkills = 0, tPart = 0, tHw = 0, tAbs = 0, tProj = 0;
+
+            studentsInGrade.forEach(s => {
+                tSkills += s.skills;
+                tPart += s.participation;
+                tHw += s.homework;
+                tAbs += s.absence;
+                tProj += s.projects;
             });
 
-            document.getElementById('totalStudents').innerText = gradeStudents.length;
-            document.getElementById('totalSkills').innerText = lessons.length;
-            document.getElementById('totalParticipation').innerText = totPart;
-            document.getElementById('totalHomework').innerText = totHw;
-            document.getElementById('totalAbsence').innerText = totAbs;
-            document.getElementById('totalProjects').innerText = totProj;
+            document.getElementById('totalStudents').innerText = studentsInGrade.length;
+            document.getElementById('totalSkills').innerText = tSkills;
+            document.getElementById('totalParticipation').innerText = tPart;
+            document.getElementById('totalHomework').innerText = tHw;
+            document.getElementById('totalAbsence').innerText = tAbs;
+            document.getElementById('totalProjects').innerText = tProj;
+            document.getElementById('totalMessagesSent').innerText = messagesSentCount;
 
-            let totalSent = 0;
-            Object.values(messageCounts).forEach(c => totalSent += c);
-            document.getElementById('totalMessagesSent').innerText = totalSent;
+            document.getElementById('statSkillsCount').innerText = tSkills;
+            document.getElementById('statAvgParticipation').innerText = studentsInGrade.length ? (tPart / studentsInGrade.length).toFixed(1) : "0.0";
+            document.getElementById('statTotalHw').innerText = tHw;
+            document.getElementById('statTotalAbs').innerText = tAbs;
 
-            const executedCount = lessons.filter(l => l.executed).length;
-            document.getElementById('totalExecutedLessons').innerText = `${executedCount} / ${lessons.length}`;
-
-            updateMsgPreview();
+            // حساب الدروس المنفذة
+            const term = document.getElementById('lessonTermSelect') ? document.getElementById('lessonTermSelect').value : "الفصل الدراسي الأول";
+            const lessonsList = (curriculumData[currentGrade] && curriculumData[currentGrade][term]) || [];
+            let executedCount = 0;
+            lessonsList.forEach(l => {
+                if(db.lessonsStatus[l.id] === true) executedCount++;
+            });
+            document.getElementById('totalExecutedLessons').innerText = `${executedCount} / ${lessonsList.length}`;
         }
 
-        function incrementMsgCount(name) {
-            messageCounts[name] = (messageCounts[name] || 0) + 1;
-            saveData();
-        }
-
-        // إدارة الدروس
-        function addLesson() {
-            const titleInput = document.getElementById('lessonTitle');
-            const chapterInput = document.getElementById('lessonChapter');
-            const descInput = document.getElementById('lessonDesc');
-
-            if(!titleInput.value.trim()) {
-                alert("الرجاء إدخال عنوان الدرس");
-                return;
-            }
-
-            const newLesson = {
-                id: Date.now(),
-                title: titleInput.value.trim(),
-                chapter: chapterInput.value.trim() || "الفصل الدراسي",
-                desc: descInput.value.trim(),
-                executed: false
-            };
-
-            lessons.push(newLesson);
-            titleInput.value = '';
-            chapterInput.value = '';
-            descInput.value = '';
-            saveData();
-            renderLessons();
-            showToast("تم إضافة الدرس بنجاح");
-        }
-
-        function toggleLessonExecution(id) {
-            const lesson = lessons.find(l => l.id === id);
-            if(lesson) {
-                lesson.executed = !lesson.executed;
-                saveData();
-                renderLessons();
-            }
-        }
-
-        function deleteLesson(id) {
-            if(confirm("هل أنت متأكد من حذف هذا الدرس؟")) {
-                lessons = lessons.filter(l => l.id !== id);
-                saveData();
-                renderLessons();
-            }
-        }
-
+        // خطة الدروس
         function renderLessons() {
-            const grid = document.getElementById('lessonsGrid');
-            let html = "";
-            lessons.forEach((l, idx) => {
+            const container = document.getElementById('lessonsContainer');
+            const termSelect = document.getElementById('lessonTermSelect');
+            if(!container || !termSelect) return;
+
+            const term = termSelect.value;
+            const lessons = (curriculumData[currentGrade] && curriculumData[currentGrade][term]) || [];
+
+            let html = '';
+            lessons.forEach(l => {
+                const isExecuted = db.lessonsStatus[l.id] === true;
                 html += `
-                    <div class="lesson-card ${l.executed ? 'executed' : 'not-executed'}">
+                    <div class="lesson-card ${isExecuted ? 'executed' : 'not-executed'}">
                         <div>
-                            <span class="ch-badge">${l.chapter}</span>
-                            <strong>${idx + 1}. ${l.title}</strong>
-                            <p>${l.desc || 'لا توجد تفاصيل إضافية.'}</p>
+                            <span class="ch-badge">${l.ch}</span>
+                            <strong>${l.title}</strong>
+                            <p>المرحلة: ${currentGrade} - ${term}</p>
                         </div>
                         <div class="lesson-actions">
-                            <button class="status-toggle-btn ${l.executed ? 'done' : 'pending'}" onclick="toggleLessonExecution(${l.id})">
-                                ${l.executed ? '✅ تم التنفيذ' : '⏳ قيد الانتظار'}
+                            <span style="font-size:12px; font-weight:bold;">الحالة: ${isExecuted ? 'منفذ ✅' : 'قيد الانتظار ⏳'}</span>
+                            <button class="status-toggle-btn ${isExecuted ? 'done' : 'pending'}" onclick="toggleLessonStatus('${l.id}')">
+                                ${isExecuted ? 'إلغاء التنفيذ' : 'تأكيد التنفيذ'}
                             </button>
-                            <button class="btn-action btn-danger" onclick="deleteLesson(${l.id})">حذف</button>
                         </div>
                     </div>
                 `;
             });
-            if(lessons.length === 0) html = `<p style="opacity:0.6; text-align:center;">لا توجد دروس مسجلة حالياً.</p>`;
-            grid.innerHTML = html;
+            container.innerHTML = html;
+            updateGlobalStats();
         }
 
-        // قوالب رسائل الواتساب
-        function updateMsgTemplateText() {
-            const type = document.getElementById('msgTemplateSelect').value;
-            const txtArea = document.getElementById('msgTemplateText');
-            if(type === 'default') {
-                txtArea.value = `عزيـزي ولي أمر الطالب / {name}\nالسلام عليكم ورحمة الله وبركاته،،\nنفيدكم بمستوى ابنكم في مادة الرياضيات ({grade}):\n- المشاركة: {participation}\n- الواجبات: {homework}\n- الغياب: {absence}\nشاكرين تعاونكم المستمر معنا.`;
-            } else if(type === 'mastery') {
-                txtArea.value = `عزيـزي ولي أمر الطالب / {name}\nالسلام عليكم ورحمة الله وبركاته،،\nنرغب في إفادتكم بحالة إتقان ابنكم للدروس والمهارات الرياضية حتى تاريخه.\nنتطلع لدعمكم المستمر معنا لتفوقه الدائم.`;
-            } else if(type === 'absence') {
-                txtArea.value = `عزيـزي ولي أمر الطالب / {name}\nالسلام عليكم ورحمة الله وبركاته،،\nنحيطكم علماً بتسجيل غياب ابنكم لعدد ({absence}) أيام.\nنرجو الاهتمام بمتابعة الحضور والانتظام الدراسي.`;
+        function toggleLessonStatus(lessonId) {
+            db.lessonsStatus[lessonId] = !db.lessonsStatus[lessonId];
+            saveDB();
+            renderLessons();
+            showToast("تم تحديث حالة الدرس");
+        }
+
+        // إرسال رسائل الواتساب
+        function updateMessagePreview() {
+            const template = document.getElementById('whatsappTemplateInput').value;
+            const preview = document.getElementById('whatsappMessagePreview');
+            if(preview) {
+                preview.innerText = `عزيـزي ولي أمر الطالب / (اسم الطالب)\n\n` + template;
             }
-            updateMsgPreview();
         }
 
-        function generateStudentMsg(s) {
-            const template = document.getElementById('msgTemplateText').value;
-            return template
-                .replace(/{name}/g, s.name)
-                .replace(/{grade}/g, s.grade)
-                .replace(/{participation}/g, s.participation || 0)
-                .replace(/{homework}/g, s.homework || 0)
-                .replace(/{absence}/g, s.absence || 0);
-        }
+        function sendBulkWhatsApp() {
+            const targetSelect = document.getElementById('whatsappTargetSelect').value;
+            const msgTemplate = document.getElementById('whatsappTemplateInput').value;
 
-        function updateMsgPreview() {
-            const sample = students.find(s => s.grade === currentGrade) || { name: "أحمد محمد", grade: currentGrade, participation: 5, homework: 4, absence: 0 };
-            const previewBox = document.getElementById('msgPreviewBox');
-            if(previewBox) previewBox.innerText = generateStudentMsg(sample);
-        }
+            const targetStudents = db.students.filter(s => {
+                if(s.grade !== currentGrade) return false;
+                if(currentClassFilter !== 'all' && (s.classCustom || "عام") !== currentClassFilter) return false;
+                if(targetSelect === 'missing_homework' && s.homework >= 3) return false;
+                if(targetSelect === 'absent_students' && s.absence === 0) return false;
+                return true;
+            });
 
-        function sendToAllFilteredStudents() {
-            const gradeStudents = students.filter(s => s.grade === currentGrade);
-            const target = currentClassFilter === "الكل" ? gradeStudents : gradeStudents.filter(s => (s.classCustom || currentGrade) === currentClassFilter);
-            
-            const withPhone = target.filter(s => s.phone);
-            if(withPhone.length === 0) {
-                alert("لا يوجد طلاب لديهم أرقام جوال مسجلة ضمن النطاق الحالي.");
+            if(targetStudents.length === 0) {
+                showToast("لا يوجد طلاب مطابقون لمعايير الإرسال الحالية");
                 return;
             }
 
-            if(confirm(`سيتم فتح روابط واتساب لـ ${withPhone.length} طالب تباعاً. هل تريد المتابعة؟`)) {
-                withPhone.forEach((s, idx) => {
-                    setTimeout(() => {
-                        window.open(`https://wa.me/${s.phone}?text=${encodeURIComponent(generateStudentMsg(s))}`, '_blank');
-                        incrementMsgCount(s.name);
-                    }, idx * 600);
-                });
-            }
+            let validCount = 0;
+            targetStudents.forEach(s => {
+                if(s.phone) {
+                    validCount++;
+                    const msg = `عزيـزي ولي أمر الطالب / ${s.name}\n\n` + msgTemplate;
+                    const url = `https://wa.me/${s.phone}?text=${encodeURIComponent(msg)}`;
+                    window.open(url, '_blank');
+                }
+            });
+
+            messagesSentCount += validCount;
+            updateGlobalStats();
+            showToast(`تم فتح نافذة الواتساب لـ ${validCount} ولي أمر`);
         }
 
-        // الوظائف العامة والطباعة والتصدير
+        // الطباعة العامة للأقسام
         function printSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if(!section) return;
             window.print();
         }
 
+        // النسخ الاحتياطي والاستيراد والتصدير
         function exportToExcel() {
-            const gradeStudents = students.filter(s => s.grade === currentGrade);
-            if(gradeStudents.length === 0) {
-                alert("لا توجد بيانات طلاب لتصديرها.");
+            const studentsInGrade = db.students.filter(s => s.grade === currentGrade);
+            if(studentsInGrade.length === 0) {
+                showToast("لا توجد بيانات طلاب لتصديرها");
                 return;
             }
-            const dataToExport = gradeStudents.map((s, idx) => ({
-                "م": idx + 1,
+
+            const dataToExport = studentsInGrade.map((s, i) => ({
+                "م": i + 1,
                 "اسم الطالب": s.name,
                 "الصف": s.grade,
-                "الفصل": s.classCustom || s.grade,
-                "الجوال": s.phone || "غير متوفر",
-                "المشاركة": s.participation || 0,
-                "الواجبات": s.homework || 0,
-                "الغياب": s.absence || 0,
-                "التمارين المساندة": s.projects || 0
+                "الفصل/الشعبة": s.classCustom || "",
+                "رقم ولي الأمر": s.phone || "",
+                "المهارات الرياضية": s.skills,
+                "المشاركات": s.participation,
+                "الواجبات": s.homework,
+                "الغياب": s.absence,
+                "التمارين المساندة": s.projects
             }));
 
             const worksheet = XLSX.utils.json_to_sheet(dataToExport);
             const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, "سجل الرياضيات");
+            XLSX.utils.book_append_sheet(workbook, worksheet, "سجل الطلاب");
             XLSX.writeFile(workbook, `سجل_رياضيات_${currentGrade}.xlsx`);
             showToast("تم تصدير ملف الإكسل بنجاح");
         }
 
-        function exportJSONBackup() {
-            const data = { students, lessons, messageCounts };
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `backup_math_dashboard_${new Date().toISOString().slice(0,10)}.json`;
-            a.click();
-            showToast("تم تصدير النسخة الاحتياطية بنجاح");
+        function exportBackup() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `awwal_math_backup_${new Date().toISOString().slice(0,10)}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+            showToast("تم حفظ النسخة الاحتياطية بنجاح");
         }
 
-        function importJSONBackup(event) {
+        function triggerImportBackup() {
+            document.getElementById('importFile').click();
+        }
+
+        function importBackup(event) {
             const file = event.target.files[0];
             if(!file) return;
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
                     const parsed = JSON.parse(e.target.result);
-                    if(parsed.students) students = parsed.students;
-                    if(parsed.lessons) lessons = parsed.lessons;
-                    if(parsed.messageCounts) messageCounts = parsed.messageCounts;
-                    saveData();
-                    renderLessons();
-                    render();
-                    showToast("تم استعادة البيانات بنجاح");
+                    if(parsed && parsed.students) {
+                        db = parsed;
+                        saveDB();
+                        renderLessons();
+                        populateMasteryLessonSelect();
+                        render();
+                        showToast("تمت استعادة النسخة الاحتياطية بنجاح");
+                    } else {
+                        alert("ملف النسخة الاحتياطية غير صالح");
+                    }
                 } catch(err) {
-                    alert("ملف النسخة الاحتياطية غير صالح.");
+                    alert("حدث خطأ أثناء قراءة الملف");
                 }
             };
             reader.readAsText(file);
         }
 
-        function resetAllData() {
-            if(confirm("تحذير: سيتم مسح كافة البيانات المسجلة نهائياً! هل أنت متأكد؟")) {
-                localStorage.removeItem('awwal_math_students_v4');
-                localStorage.removeItem('awwal_math_lessons_v4');
-                localStorage.removeItem('awwal_math_msg_counts_v4');
-                students = [];
-                lessons = getDefaultLessons();
-                messageCounts = {};
-                saveData();
+        function clearAllData() {
+            if(confirm("تحذير دائم: هل أنت متأكد من حذف كافة بيانات الطلاب والدروس والمسجلات نهائياً؟")) {
+                db = { students: [], lessonsStatus: {} };
+                saveDB();
                 renderLessons();
+                populateMasteryLessonSelect();
                 render();
-                showToast("تمت تهيئة ومسح البيانات بنجاح");
+                showToast("تم تفريغ كافة البيانات بنجاح");
             }
         }
     </script>
