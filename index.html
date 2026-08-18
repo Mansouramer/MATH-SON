@@ -763,33 +763,6 @@
             </div>
         </div>
 
-        <div class="section-card print-target" id="lessonsMasterySection">
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 10px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
-                <h3 style="margin: 0; border: none; padding: 0;">🎯 تتبع إتقان الدروس لكل طالب (أتقن / لم يتقن)</h3>
-                <button class="btn-print" onclick="printSection('lessonsMasterySection')" title="طباعة سجل إتقان الدروس">🖨️ طباعة سجل الإتقان</button>
-            </div>
-            <p style="font-size: 13px; opacity: 0.85; margin-bottom: 15px;">
-                اختر الدرس أدناه لتحديث حالة إتقان كل طالب في الصف الحالي (اضغط على الزر لتغيير الحالة بين <strong>✅ أتقن</strong> و <strong>❌ لم يتقن</strong>):
-            </p>
-            <div class="form-row">
-                <select id="masteryLessonSelect" onchange="renderMasteryTable()" style="font-weight: bold; color: var(--secondary);"></select>
-            </div>
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>م</th>
-                            <th>اسم الطالب</th>
-                            <th>الفصل / الشعبة</th>
-                            <th>حالة الإتقان للدرس المختصر</th>
-                        </tr>
-                    </thead>
-                    <tbody id="masteryTableBody">
-                        </tbody>
-                </table>
-            </div>
-        </div>
-
         <div class="section-card print-target" id="studentsTableSection">
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 10px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
                 <h3 style="margin: 0; border: none; padding: 0;">✏️ تسجيل الطلاب والصفوف ومتابعة السجل (التعديل بالأسهم)</h3>
@@ -836,6 +809,33 @@
                     <span id="pageInfo" style="font-size: 13px; font-weight: bold;">صفحة 1 من 1</span>
                     <button onclick="changePage(1)" id="nextPageBtn" class="btn-action">التالي</button>
                 </div>
+            </div>
+        </div>
+
+        <div class="section-card print-target" id="lessonsMasterySection">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 10px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                <h3 style="margin: 0; border: none; padding: 0;">🎯 تتبع إتقان الدروس لكل طالب (أتقن / لم يتقن)</h3>
+                <button class="btn-print" onclick="printSection('lessonsMasterySection')" title="طباعة سجل إتقان الدروس">🖨️ طباعة سجل الإتقان</button>
+            </div>
+            <p style="font-size: 13px; opacity: 0.85; margin-bottom: 15px;">
+                اختر الدرس أدناه لتحديث حالة إتقان كل طالب في الصف الحالي (اضغط على الزر لتغيير الحالة بين <strong>✅ أتقن</strong> و <strong>❌ لم يتقن</strong>):
+            </p>
+            <div class="form-row">
+                <select id="masteryLessonSelect" onchange="renderMasteryTable()" style="font-weight: bold; color: var(--secondary);"></select>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>م</th>
+                            <th>اسم الطالب</th>
+                            <th>الفصل / الشعبة</th>
+                            <th>حالة الإتقان للدرس المختصر</th>
+                        </tr>
+                    </thead>
+                    <tbody id="masteryTableBody">
+                        </tbody>
+                </table>
             </div>
         </div>
 
@@ -1134,7 +1134,7 @@
             }, 250);
         }
 
-        // دوال نظام تتقع إتقان الدروس (أتقن / لم يتقن)
+        // دوال نظام تتبع إتقان الدروس (أتقن / لم يتقن)
         function populateMasteryLessonSelect() {
             const select = document.getElementById('masteryLessonSelect');
             if(!select) return;
