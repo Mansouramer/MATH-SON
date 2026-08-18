@@ -18,26 +18,34 @@
             --warning: #f59e0b;
             --info: #06b6d4;
             --excel: #1d6f42;
-      @media print {
-  @page {
-    size: landscape;
-    margin:9mm;
+    @media print {
+    @page {
+      size: landscape;
+      margin: 5mm;
+    }
+
+    body {
+      transform: scale(0.85);
+      transform-origin: top right;
+      width: 100% !important;
+    }
+
+    html, body, div, .container, .card {
+      max-width: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      box-shadow: none !important;
+      background: transparent !important;
+    }
+
+    button, .btn, .no-print, nav, header {
+      display: none !important;
+    }
+
+    table, tr, td, th, .card {
+      page-break-inside: avoid;
+    }
   }
-  html, body, div, .container, .card {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 12 !important;
-    padding: 2mm !important;
-    box-shadow: none !important;
-    background: transparent !important;
-  }
-  button, .btn, .no-print, nav, header {
-    display: none !important;
-  }
-  table, tr, td, th, .card {
-    page-break-inside: avoid;
-  }
-}  }
 
         body.theme-default { 
             --bg: linear-gradient(135deg, #eff6ff 0%, #bfdbfe 100%); 
