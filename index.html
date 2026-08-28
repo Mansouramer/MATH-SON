@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>مدرسة داوود - لوحة تحكم مادة الرياضيات</title>
+    <title>الابتدائية الأولى - لوحة تحكم مادة الرياضيات</title>
+    <!-- رابط ملف الـ Manifest لتثبيت التطبيق -->
+    <link rel="manifest" href="manifest.json">
     <!-- مكتبة SheetJS لتصدير واستيراد ملفات إكسل Excel -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
@@ -18,26 +20,7 @@
             --warning: #f59e0b;
             --info: #06b6d4;
             --excel: #1d6f42;
-      @media print {
-  @page {
-    size: landscape;
-    margin: 5mm;
-  }
-  html, body, div, .container, .card {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-    padding: 2mm !important;
-    box-shadow: none !important;
-    background: transparent !important;
-  }
-  button, .btn, .no-print, nav, header {
-    display: none !important;
-  }
-  table, tr, td, th, .card {
-    page-break-inside: avoid;
-  }
-}  }
+        }
 
         body.theme-default { 
             --bg: linear-gradient(135deg, #eff6ff 0%, #bfdbfe 100%); 
@@ -258,13 +241,13 @@
             button { width: auto; }
         }
 
-button:hover { opacity: 0.9; }
-.btn-danger { background: var(--danger); }
-.btn-info { background: var(--info); }
-.btn-warning { background: var(--warning); }
-.btn-excel { background: var(--excel); }
-.btn-print { background: #4b5563; }
-.btn-action { padding: 6px 10px; font-size: 12px; margin: 2px; width: auto; }
+        button:hover { opacity: 0.9; }
+        .btn-danger { background: var(--danger); }
+        .btn-info { background: var(--info); }
+        .btn-warning { background: var(--warning); }
+        .btn-excel { background: var(--excel); }
+        .btn-print { background: #4b5563; }
+        .btn-action { padding: 6px 10px; font-size: 12px; margin: 2px; width: auto; }
 
         .counter-cell {
             display: inline-flex;
@@ -586,16 +569,55 @@ button:hover { opacity: 0.9; }
             text-align: center;
         }
 
-        .backup-controls {
+        /* تنسيق الأزرار والمربعات على هيئة مستطيلات مرتبة عمودياً كـ شاشة الجوال */
+        .backup-controls,
+        .stacked-controls {
             display: flex;
-            gap: 8px;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px dashed #ccc;
-            flex-wrap: wrap;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            max-width: 480px;
+            margin: 15px auto 0 auto;
+            box-sizing: border-box;
         }
 
-        .backup-controls button { flex: 1 1 140px; }
+        .backup-controls {
+            padding-top: 15px;
+            border-top: 1px dashed #ccc;
+        }
+
+        .backup-controls button,
+        .stacked-controls button,
+        .stacked-controls select,
+        .stacked-controls input {
+            width: 100% !important;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 !important;
+        }
+
+        .section-header-row {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            border-bottom: 2px solid rgba(0,0,0,0.1);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .section-header-row h3 {
+            margin: 0;
+            border: none;
+            padding: 0;
+        }
+
+        .section-header-row button {
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+        }
 
         .class-badge {
             background-color: var(--secondary);
@@ -710,7 +732,6 @@ button:hover { opacity: 0.9; }
             .btn-action, .backup-controls, .pagination-bar, .form-row, .classes-query-grid,
             .no-print, button, select, textarea, .searchable-dropdown-container { display: none !important; }
             
-            /* إظهار صندوق مؤشرات التحليل الإحصائي عند الطباعة بوضوح */
             #examsAnalysisBox { display: block !important; visibility: visible !important; background: #f8fafc !important; border: 1px solid #1e3a8a !important; }
             
             .container { max-width: 100% !important; margin: 0 !important; width: 100% !important; }
@@ -746,10 +767,17 @@ button:hover { opacity: 0.9; }
     </div>
 
     <div class="header">
-        <h1>مدرسة داوود (طلاب)</h1>
-        <div>إعداد المعلم: منصور عامر الرحيلي</div>
-        <p>لوحة تحكم معلم مادة الرياضيات للمرحلة الابتدائية (وفق المنهج السعودي)</p>
+        <h1>الابتدائية الأولى (طالبات)</h1>
+        <div>إعداد المعلمة: فلانة</div>
+        <p>لوحة تحكم معلمة مادة الرياضيات للمرحلة الابتدائية (وفق المنهج السعودي)</p>
         <div class="subscription-badge">⏳ نهاية الاشتراك: 2027/07/01</div>
+
+        <!-- زر التثبيت البنفسجي المضاف هنا في الهيدر -->
+        <div style="margin-top: 15px;">
+            <button onclick="installApp()" id="installBtn" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-md hidden" style="background-color: #7c3aed; display: none; margin: 0 auto; width: auto;">
+                📱 تثبيت التطبيق كبرنامج مستقل
+            </button>
+        </div>
 
         <div class="theme-switcher">
             <span style="font-size: 12px; margin-left: 5px;">🎨 المظهر:</span>
@@ -779,7 +807,7 @@ button:hover { opacity: 0.9; }
         <!-- الإحصائيات -->
         <div class="stats-grid">
             <div class="stat-card">
-                <h3>👥 إجمالي الطلاب</h3>
+                <h3>👥 إجمالي الطالبات</h3>
                 <p id="totalStudents">0</p>
             </div>
             <div class="stat-card">
@@ -812,18 +840,18 @@ button:hover { opacity: 0.9; }
             </div>
         </div>
 
-        <!-- تسجيل الطلاب والصفوف والجدول -->
+        <!-- تسجيل الطالبات والصفوف والجدول -->
         <div class="section-card" id="studentsTableSection">
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 10px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
-                <h3 style="margin: 0; border: none; padding: 0;">✏️ تسجيل الطلاب والصفوف ومتابعة السجل (التعديل بالأسهم)</h3>
-                <button class="btn-print" onclick="printSection('studentsTableSection')" title="طباعة جدول الطلاب والصفوف">🖨️ طباعة الجدول</button>
+            <div class="section-header-row">
+                <h3 style="margin: 0; border: none; padding: 0;">✏️ تسجيل الطالبات والصفوف ومتابعة السجل (التعديل بالأسهم)</h3>
+                <button class="btn-print" onclick="printSection('studentsTableSection')" title="طباعة جدول الطالبات والصفوف">🖨️ طباعة الجدول</button>
             </div>
             
             <div class="form-row">
-                <input type="text" id="studentName" placeholder="اسم الطالب (Student Name)">
+                <input type="text" id="studentName" placeholder="اسم الطالبة (Student Name)">
                 <input type="text" id="studentClassCustom" placeholder="اكتب الصف (مثال: رابع ابتدائي أول)">
                 <input type="tel" id="studentPhone" placeholder="رقم جوال ولي الأمر (مثال: 05xxxxxxx)">
-                <button onclick="addStudent()">➕ إضافة طالب</button>
+                <button onclick="addStudent()">➕ إضافة طالبة</button>
             </div>
 
             <div style="margin-top: 20px;">
@@ -832,15 +860,15 @@ button:hover { opacity: 0.9; }
             </div>
 
             <div class="form-row" style="align-items: center; background: rgba(0,0,0,0.03); padding: 8px; border-radius: 6px; margin-top: 15px;">
-                <span style="font-weight: bold; font-size: 14px; width: 100%;">🔍 بحث عن طالب محدد بالاسم:</span>
-                <input type="text" id="filterStudentNameInput" placeholder="اكتب اسم الطالب للبحث..." oninput="filterTableByStudentInput()" style="width: 100%;">
+                <span style="font-weight: bold; font-size: 14px; width: 100%;">🔍 بحث عن طالبة محددة بالاسم:</span>
+                <input type="text" id="filterStudentNameInput" placeholder="اكتب اسم الطالبة للبحث..." oninput="filterTableByStudentInput()" style="width: 100%;">
             </div>
 
             <div class="table-responsive">
                 <table>
                     <thead>
                         <tr>
-                            <th>اسم الطالب</th>
+                            <th>اسم الطالبة</th>
                             <th>🏫 الصف</th>
                             <th>📱 رقم الجوال</th>
                             <th>🔴 الغياب</th>
@@ -878,12 +906,12 @@ button:hover { opacity: 0.9; }
 
         <!-- تقرير رصد مؤشرات التحليل الإحصائي مع درجات الاختبار -->
         <div class="section-card" id="examsSection">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 10px; margin-bottom: 15px;">
+            <div class="section-header-row">
                 <h3 style="margin: 0; border: none; padding: 0;">📊 تقرير رصد مؤشرات التحليل الإحصائي مع درجات الاختبار 📝</h3>
                 <button class="btn-print" onclick="printSection('examsSection')">🖨️ طباعة تقرير رصد المؤشرات والدرجات</button>
             </div>
             
-            <div class="form-row">
+            <div class="stacked-controls">
                 <select id="examClassSelect" onchange="renderExamsTable()">
                     <option value="">-- اختر الصف لعرض السجل وتقرير المؤشرات والدرجات --</option>
                 </select>
@@ -907,7 +935,7 @@ button:hover { opacity: 0.9; }
                 <table>
                     <thead>
                         <tr>
-                            <th>اسم الطالب</th>
+                            <th>اسم الطالبة</th>
                             <th>🏫 الصف</th>
                             <th>📝 اختبار الفترة الأولى (من 20)</th>
                             <th>📝 اختبار الفترة الثانية (من 20)</th>
@@ -915,25 +943,25 @@ button:hover { opacity: 0.9; }
                         </tr>
                     </thead>
                     <tbody id="examsTbody">
-                        <tr><td colspan="5" style="padding: 20px; opacity: 0.7;">الرجاء اختيار الصف الدراسي من القائمة أعلاه لعرض تقرير رصد المؤشرات ودرجات الطلاب.</td></tr>
+                        <tr><td colspan="5" style="padding: 20px; opacity: 0.7;">الرجاء اختيار الصف الدراسي من القائمة أعلاه لعرض تقرير رصد المؤشرات ودرجات الطالبات.</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- استعلام عن طالب -->
+        <!-- استعلام عن طالبة -->
         <div class="section-card" id="studentReportPrintArea">
-            <h3>🔍 استعلام وتتبع طالب محدد</h3>
+            <h3>🔍 استعلام وتتبع طالبة محددة</h3>
             <div class="form-row">
                 <div class="searchable-dropdown-container">
-                    <input type="text" id="studentSearchInput" class="searchable-input" placeholder="اكتب اسم الطالب للبحث الحر بالكيبورد..." oninput="filterStudentDropdown()" onfocus="showStudentDropdown()" autocomplete="off">
+                    <input type="text" id="studentSearchInput" class="searchable-input" placeholder="اكتب اسم الطالبة للبحث الحر بالكيبورد..." oninput="filterStudentDropdown()" onfocus="showStudentDropdown()" autocomplete="off">
                     <div id="studentDropdownList" class="searchable-dropdown-list"></div>
                 </div>
             </div>
 
             <div id="studentCard" style="display: none;">
                 <div>
-                    <h4>سجل الطالب: <span id="selectedName"></span> (<span id="selectedClassBadge" class="class-badge"></span>)</h4>
+                    <h4>سجل الطالبة: <span id="selectedName"></span> (<span id="selectedClassBadge" class="class-badge"></span>)</h4>
                     
                     <div class="form-row" style="margin-top: 10px; align-items: center;">
                         <input type="tel" id="editStudentPhoneInput" placeholder="تعديل رقم الجوال..." style="flex:1;">
@@ -950,9 +978,9 @@ button:hover { opacity: 0.9; }
                     </div>
                 </div>
 
-                <div class="form-row" style="margin-top: 15px;">
-                    <button class="btn-print" onclick="printStudentReport()">🖨️ طباعة تقرير الطالب الرسمي</button>
-                    <button class="whatsapp-btn" onclick="sendFullReportWhatsApp()" style="border: none; cursor: pointer; margin-top: 0; width: 100%;">📤 إرسال التقرير الشامل لولي الأمر عبر واتساب</button>
+                <div class="stacked-controls" style="margin-top: 15px;">
+                    <button class="btn-print" onclick="printStudentReport()">🖨️ طباعة تقرير الطالبة الرسمي</button>
+                    <button class="whatsapp-btn" onclick="sendFullReportWhatsApp()" style="border: none; cursor: pointer;">📤 إرسال التقرير الشامل لولي الأمر عبر واتساب</button>
                 </div>
 
                 <div class="sub-box">
@@ -989,7 +1017,7 @@ button:hover { opacity: 0.9; }
 
         <!-- إرسال جماعي لأولياء الأمور -->
         <div class="section-card">
-            <h3>📢 إرسال رسالة أو واجب جماعي لأولياء الأمور (مع عرض أسماء الطلاب للإرسال اليدوي المنظم)</h3>
+            <h3>📢 إرسال رسالة أو واجب جماعي لأولياء الأمور (مع عرض أسماء الطالبات للإرسال اليدوي المنظم)</h3>
             <div class="sub-box" style="margin-top: 0;">
                 <div class="form-row">
                     <select id="bulkTargetClass" onchange="updateBulkMsgPreview()">
@@ -1005,53 +1033,55 @@ button:hover { opacity: 0.9; }
                 <div id="bulkMsgPreview" class="preview-msg">اختر الصف والدرس أو الرسالة التشجيعية وأدخل الملاحظات لعرض نموذج الرسالة الجماعية...</div>
                 
                 <div style="margin-top: 15px;">
-                    <h5 style="margin-bottom: 8px; color: var(--secondary);">👥 قائمة الطلاب المستهدفين (اضغط على "إرسال" أمام كل طالب لإرسال الرسالة بشكل يدوي منظم):</h5>
+                    <h5 style="margin-bottom: 8px; color: var(--secondary);">👥 قائمة الطالبات المستهدفات (اضغط على "إرسال" أمام كل طالبة لإرسال الرسالة بشكل يدوي منظم):</h5>
                     <div class="table-responsive">
                         <table>
                             <thead>
                                 <tr>
                                     <th>م</th>
-                                    <th>اسم الطالب</th>
+                                    <th>اسم الطالبة</th>
                                     <th>الصف</th>
                                     <th>رقم الجوال</th>
                                     <th>إجراء الإرسال اليدوي</th>
                                 </tr>
                             </thead>
                             <tbody id="bulkStudentsListTbody">
-                                <tr><td colspan="5" style="padding: 15px; opacity: 0.7;">الرجاء اختيار الدرس وتحديد الصف لعرض الطلاب وأزرار الإرسال.</td></tr>
+                                <tr><td colspan="5" style="padding: 15px; opacity: 0.7;">الرجاء اختيار الدرس وتحديد الصف لعرض الطالبات وأزرار الإرسال.</td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
-<!-- القسم المدمج الجديد: تتبع إتقان كل درس -->
-<div class="section-card" id="masterySection">
-    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 10px; margin-bottom: 15px;">
-        <h3 style="margin: 0; border: none; padding: 0;">🎯 تتبع إتقان كل درس لكل طالب</h3>
-        <button class="btn-print" onclick="printSection('masterySection')">🖨️ طباعة التقرير</button>
-    </div>
-    <div class="form-row">
-        <select id="masteryLessonSelect" onchange="renderMasteryTable()">
-            <option value="">-- اختر الدرس لتحديد حالة الإتقان --</option>
-        </select>
-    </div>
-    <div class="table-responsive">
-        <table>
-            <thead>
-                <tr>
-                    <th>اسم الطالب</th>
-                    <th>الصف</th>
-                    <th>الحالة</th>
-                    <th>تبديل الحالة</th>
-                </tr>
-            </thead>
-            <tbody id="masteryTbody">
-                <tr><td colspan="4">الرجاء اختيار درس من القائمة أعلاه</td></tr>
-            </tbody>
-        </table>
-    </div>
-</div>
+
+        <!-- القسم المدمج الجديد: تتبع إتقان كل درس -->
+        <div class="section-card" id="masterySection">
+            <div class="section-header-row">
+                <h3 style="margin: 0; border: none; padding: 0;">🎯 تتبع إتقان كل درس لكل طالب</h3>
+                <button class="btn-print" onclick="printSection('masterySection')">🖨️ طباعة التقرير</button>
+            </div>
+            <div class="stacked-controls">
+                <select id="masteryLessonSelect" onchange="renderMasteryTable()">
+                    <option value="">-- اختر الدرس لتحديد حالة الإتقان --</option>
+                </select>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>اسم الطالب</th>
+                            <th>الصف</th>
+                            <th>الحالة</th>
+                            <th>تبديل الحالة</th>
+                        </tr>
+                    </thead>
+                    <tbody id="masteryTbody">
+                        <tr><td colspan="4">الرجاء اختيار درس من القائمة أعلاه</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <!-- قائمة وحدات ودروس مادة الرياضيات وتعديل إضافة مجموعة الدروس -->
         <div class="section-card">
             <h3 id="curriculumTitle">📚 دليل مقرر الرياضيات - المرحلة الابتدائية (المنهج السعودي) وتتبع التنفيذ</h3>
@@ -1097,17 +1127,20 @@ button:hover { opacity: 0.9; }
         </div>
 
     </div>
-<!-- زر حفظ النسخة الاحتياطية -->
-<div style="text-align: center; margin: 20px 0;">
-    <button class="btn-info" onclick="backupDashboardData()" style="background: #e11d48; padding: 12px 24px; font-size: 15px; border-radius: 8px; cursor: pointer; color: white; border: none;">
-        💾 حفظ نسخة كاملة للداش بورد على الجهاز
-    </button>
-</div><div style="text-align: center; margin: 10px 0;">
-    <input type="file" id="importBackupFile" accept=".json" style="display: none;" onchange="restoreDashboardData(event)">
-    <button class="btn-warning" onclick="document.getElementById('importBackupFile').click()" style="background: #f59e0b; padding: 12px 24px; font-size: 15px; border-radius: 8px; cursor: pointer; color: white; border: none;">
-        📂 استرجاع النسخة الاحتياطية من الجهاز
-    </button>
-</div>
+
+    <div class="section-card" style="text-align: center; background: #ffffff; margin: 20px auto; max-width: 600px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); padding: 20px;">
+        <h4 style="color: var(--secondary, #2563eb); margin: 0 0 15px 0; font-size: 16px;">💾 النسخ الاحتياطي وإدارة البيانات</h4>
+        <div class="stacked-controls">
+            <button class="btn-info" onclick="backupAllData()" style="background: #e11d48; padding: 12px 20px; font-size: 14px; border-radius: 6px; cursor: pointer; color: white; border: none; font-weight: bold;">
+                💾 حفظ نسخة كاملة
+            </button>
+            <input type="file" id="importBackupFile" accept=".json" style="display: none;" onchange="restoreDashboardData(event)">
+            <button class="btn-warning" onclick="document.getElementById('importBackupFile').click()" style="background: #f59e0b; padding: 12px 20px; font-size: 14px; border-radius: 6px; cursor: pointer; color: white; border: none; font-weight: bold;">
+                📂 استرجاع النسخة
+            </button>
+        </div>
+    </div>
+
     <!-- الأزرار العائمة -->
     <div class="floating-action-buttons">
         <a href="https://wa.me/966581015002" target="_blank" class="float-btn float-whatsapp" title="تواصل الدعم الفني عبر واتساب">💬</a>
@@ -1117,8 +1150,32 @@ button:hover { opacity: 0.9; }
     <div id="toast" class="toast">✅ تم حفظ البيانات تلقائياً!</div>
 
     <script>
+        // كود تشغيل وتفعيل زر التثبيت والتطبيق المصغر (PWA)
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            const installBtn = document.getElementById('installBtn');
+            if (installBtn) {
+                installBtn.classList.remove('hidden');
+                installBtn.style.display = 'inline-block';
+            }
+        });
+
+        function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('تم قبول تثبيت التطبيق');
+                    }
+                    deferredPrompt = null;
+                });
+            }
+        }
+
         const TEACHER_NAME = "منصور عامر الرحيلي";
-        const SCHOOL_NAME = "مدرسة داوود (طلاب)";
+        const SCHOOL_NAME = "الابتدائية الأولى (طالبات)";
 
         let currentGrade = localStorage.getItem('awwal_current_grade_math_v4') || 'الأول الابتدائي';
         document.getElementById('globalGradeSelect').value = currentGrade;
@@ -1129,16 +1186,16 @@ button:hover { opacity: 0.9; }
         const rowsPerPage = 20;
 
         const defaultMotivations = [
-            { id: "1", title: "1. عبقري الرياضيات المتميز", text: "🌟 **عبقري الرياضيات المتميز** 🌟\nعزيزي ولي الأمر، نفخر اليوم بتميز ابنكم وتألقه في حصة الرياضيات وحل المسائل الحسابية بدقة وسرعة. بوركت جهودكم!" },
-            { id: "2", title: "2. تفوق ملحوظ في التفكير المنطقي", text: "🔢 **تفوق ملحوظ في التفكير المنطقي والعد** 🔢\nعزيزي ولي الأمر، أظهر ابنكم اليوم مهارات فائقة في استنتاج الحلول الرياضية بدقة متناهية. أحسن صنعاً!" },
-            { id: "3", title: "3. دقة وإتقان في العمليات الحسابية", text: "➕ **دقة وإتقان في الجمع والطرح والعمليات** ✖️\nعزيزي ولي الأمر، تميز ابنكم اليوم بحل المسائل الحسابية المعقدة بمهارة وذكاء. بارك الله في جهوده!" },
-            { id: "4", title: "4. مشاركة نشطة وفعالة في حصة الرياضيات", text: "✋ **مشاركة نشطة وتفاعل رياضي متميز** ✋\nعزيزي ولي الأمر، تميز ابنكم اليوم بحرصه العالي ومشاركته النشطة وإجاباته الرياضية الموفقة داخل الصف." },
-            { id: "5", title: "5. إتقان رائع للهندسة والأشكال والأقياس", text: "📐 **إتقان رائع للهندسة والأشكال القياسية** 📏\nعزيزي ولي الأمر، أبدع ابنكم اليوم في تمييز الأشكال الهندسية وقياس الأطوال بدقة عالية. مبروك له!" },
-            { id: "6", title: "6. تنظيم رائع للدفتر وحل التمارين بمرتبة", text: "📝 **تنظيم رائع للواجبات والتمارين الرياضية** 📝\nعزيزي ولي الأمر، نشكر لكم متابعتكم المنزلية الواعية. لقد كان حل ابنكم للتمارين اليوم منظماً ودقيقاً للغاية." },
-            { id: "7", title: "7. حل ممتاز لاختبارات التقويم والمسائل", text: "✍️ **حل ممتاز للمسائل والتقويم المستمر**\nعزيزي ولي الأمر، تميز أداء ابنكم اليوم بحل مسائل الرياضيات والتمارين الإثرائية بدقة عالية. دمت متميزاً يا بطل!" },
-            { id: "8", title: "8. إبداع في حل المسائل اللفظية والكلامية", text: "🧠 **إبداع في تحليل وحل المسائل الكلامية**\nعزيزي ولي الأمر، أظهر ابنكم اليوم شغفاً وفهماً عميقاً لتحليل المسائل اللفظية وتحويلها إلى معادلات ناجحة." },
-            { id: "9", title: "9. مشاركة فعالة في الأنشطة الذهنية والعد", text: "⚡ **سرعة وبديهة متميزة في الحساب الذهني**\nعزيزي ولي الأمر، قدم ابنكم اليوم أداءً استثنائياً في مهارات الحساب الذهني السريع." },
-            { id: "10", title: "10. اجتهاد وحرص عالٍ على إتقان مهارات الرياضيات", text: "⭐ **اجتهاد وحرص عالٍ على إتقان الرياضيات**\nعزيزي ولي الأمر، إن حرص ابنكم المستمر على التطور وحل التمارين في مادة الرياضيات محل تقديرنا الدائم." }
+            { id: "1", title: "1. عبقري الرياضيات المتميز", text: "🌟 **عبقري الرياضيات المتميز** 🌟\nعزيزي ولي الأمر، نفخر اليوم بتميز ابنتكم وتألقها في حصة الرياضيات وحل المسائل الحسابية بدقة وسرعة. بوركت جهودكم!" },
+            { id: "2", title: "2. تفوق ملحوظ في التفكير المنطقي", text: "🔢 **تفوق ملحوظ في التفكير المنطقي والعد** 🔢\nعزيزي ولي الأمر، أظهرت ابنتكم اليوم مهارات فائقة في استنتاج الحلول الرياضية بدقة متناهية. أحسنت صنعاً!" },
+            { id: "3", title: "3. دقة وإتقان في العمليات الحسابية", text: "➕ **دقة وإتقان في الجمع والطرح والعمليات** ✖️\nعزيزي ولي الأمر، تميزت ابنتكم اليوم بحل المسائل الحسابية المعقدة بمهارة وذكاء. بارك الله في جهودها!" },
+            { id: "4", title: "4. مشاركة نشطة وفعالة في حصة الرياضيات", text: "✋ **مشاركة نشطة وتفاعل رياضي متميز** ✋\nعزيزي ولي الأمر، تميزت ابنتكم اليوم بحرصها العالي ومشاركتها النشطة وإجاباتها الرياضية الموفقة داخل الصف." },
+            { id: "5", title: "5. إتقان رائع للهندسة والأشكال والأقياس", text: "📐 **إتقان رائع للهندسة والأشكال القياسية** 📏\nعزيزي ولي الأمر، أبدعت ابنتكم اليوم في تمييز الأشكال الهندسية وقياس الأطوال بدقة عالية. مبروك لها!" },
+            { id: "6", title: "6. تنظيم رائع للدفتر وحل التمارين بمرتبة", text: "📝 **تنظيم رائع للواجبات والتمارين الرياضية** 📝\nعزيزي ولي الأمر، نشكر لكم متابعتكم المنزلية الواعية. لقد كان حل ابنتكم للتمارين اليوم منظماً ودقيقاً للغاية." },
+            { id: "7", title: "7. حل ممتاز لاختبارات التقويم والمسائل", text: "✍️ **حل ممتاز للمسائل والتقويم المستمر**\nعزيزي ولي الأمر، تميز أداء ابنتكم اليوم بحل مسائل الرياضيات والتمارين الإثرائية بدقة عالية. دمت متميزة يا بطلة!" },
+            { id: "8", title: "8. إبداع في حل المسائل اللفظية والكلامية", text: "🧠 **إبداع في تحليل وحل المسائل الكلامية**\nعزيزي ولي الأمر، أظهرت ابنتكم اليوم شغفاً وفهماً عميقاً لتحليل المسائل اللفظية وتحويلها إلى معادلات ناجحة." },
+            { id: "9", title: "9. مشاركة فعالة في الأنشطة الذهنية والعد", text: "⚡ **سرعة وبديهة متميزة في الحساب الذهني**\nعزيزي ولي الأمر، قدمت ابنتكم اليوم أداءً استثنائياً في مهارات الحساب الذهني السريع." },
+            { id: "10", title: "10. اجتهاد وحرص عالٍ على إتقان مهارات الرياضيات", text: "⭐ **اجتهاد وحرص عالٍ على إتقان الرياضيات**\nعزيزي ولي الأمر، إن حرص ابنتكم المستمر على التطور وحل التمارين في مادة الرياضيات محل تقديرنا الدائم." }
         ];
 
         let customMotivations = JSON.parse(localStorage.getItem('awwal_custom_motivations_math_v4')) || defaultMotivations;
@@ -1161,7 +1218,7 @@ button:hover { opacity: 0.9; }
                 { chapter: "الفصل 4: الجمع والطرح ضمن الـ 1000", title: "جمع وطرح الأعداد الكبيرة", desc: "إجراء عمليات الجمع والطرح مع إعادة التجميع وبدونها." },
                 { chapter: "الفصل 5: القياس: الطول والمحيط", title: "قياس الأطوال بالسنتيمتر والمتر", desc: "استعمال أدوات القياس القياسية لحساب الأطوال." },
                 { chapter: "الفصل 6: القياس: المساحة والكتلة والسعة", title: "تقدير القياسات ووحداتها المعيارية", desc: "دراسة وحدات الكتلة (الجرام والكيلوجرام) والسعة (اللتر)." },
-                { chapter: "الفصل 7: الكسور", title: "الكسور كجزء من الكل", desc: "التعرف على النصف والربع والثلت وكتابة الكسور البسيطة." },
+                { chapter: "الفصل 7: الكسور", title: "الكسور كجزء من الكل", desc: "التعرف على النصف والربع والثلث وكتابة الكسور البسيطة." },
                 { chapter: "الفصل 8: الأشكال الهندسية", title: "الخصائص الهندسية للأشكال والشبكات", desc: "الأضلاع والرؤوس في الأشكال المستوية والمجسمات." }
             ],
             "الثالث الابتدائي": [
@@ -1224,7 +1281,7 @@ button:hover { opacity: 0.9; }
 
         function printStudentReport() {
             if (selectedStudentIndex === '') {
-                alert('الرجاء اختيار طالب من القائمة أولاً لطباعة تقريره.');
+                alert('الرجاء اختيار طالبة من القائمة أولاً لطباعة تقريرها.');
                 return;
             }
             const printArea = document.getElementById('studentReportPrintArea');
@@ -1439,7 +1496,7 @@ button:hover { opacity: 0.9; }
             const sClass = document.getElementById('studentClassCustom').value.trim() || currentGrade;
             const phone = document.getElementById('studentPhone').value.trim();
 
-            if(!name) { alert('الرجاء إدخال اسم الطالب'); return; }
+            if(!name) { alert('الرجاء إدخال اسم الطالبة'); return; }
 
             students.push({
                 name: name,
@@ -1459,7 +1516,7 @@ button:hover { opacity: 0.9; }
             document.getElementById('studentName').value = '';
             document.getElementById('studentPhone').value = '';
             render();
-            showToast('➕ تمت إضافة الطالب بنجاح!');
+            showToast('➕ تمت إضافة الطالبة بنجاح!');
         }
 
         function createCounterCell(globalIndex, field, value) {
@@ -1505,7 +1562,7 @@ button:hover { opacity: 0.9; }
             const pageData = filtered.slice(startIdx, startIdx + rowsPerPage);
 
             if(pageData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="10" style="padding: 20px; opacity: 0.7;">لا توجد بيانات طلاب مسجلة حالياً.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="10" style="padding: 20px; opacity: 0.7;">لا توجد بيانات طالبات مسجلة حالياً.</td></tr>`;
                 document.getElementById('paginationInfo').textContent = `عرض 0 من 0`;
                 document.getElementById('pageIndicator').textContent = `1 / 1`;
                 return;
@@ -1529,7 +1586,7 @@ button:hover { opacity: 0.9; }
                 tbody.appendChild(tr);
             });
 
-            document.getElementById('paginationInfo').textContent = `عرض من ${startIdx + 1} إلى ${Math.min(startIdx + rowsPerPage, totalRows)} من أصل ${totalRows} طالب`;
+            document.getElementById('paginationInfo').textContent = `عرض من ${startIdx + 1} إلى ${Math.min(startIdx + rowsPerPage, totalRows)} من أصل ${totalRows} طالبة`;
             document.getElementById('pageIndicator').textContent = `${currentPage} / ${totalPages}`;
         }
 
@@ -1540,15 +1597,15 @@ button:hover { opacity: 0.9; }
             localStorage.setItem(getStorageKeyForStudents(), JSON.stringify(students));
             selectStudentForDetails(selectedStudentIndex);
             renderStudentsTable();
-            showToast('📱 تم تحديث رقم جوال الطالب بنجاح!');
+            showToast('📱 تم تحديث رقم جوال الطالبة بنجاح!');
         }
 
         function deleteStudent(index) {
-            if(confirm('هل أنت متأكد من حذف هذا الطالب؟')) {
+            if(confirm('هل أنت متأكد من حذف هذه الطالبة؟')) {
                 students.splice(index, 1);
                 localStorage.setItem(getStorageKeyForStudents(), JSON.stringify(students));
                 render();
-                showToast('🗑️ تم حذف الطالب بنجاح!');
+                showToast('🗑️ تم حذف الطالبة بنجاح!');
             }
         }
 
@@ -1598,12 +1655,12 @@ button:hover { opacity: 0.9; }
 
         function deleteEntireClass(cName, event) {
             event.stopPropagation();
-            if(confirm(`هل أنت متأكد من حذف جميع طلاب الصف (${cName})؟`)) {
+            if(confirm(`هل أنت متأكد من حذف جميع طالبات الصف (${cName})؟`)) {
                 students = students.filter(s => (s.classCustom || currentGrade) !== cName);
                 localStorage.setItem(getStorageKeyForStudents(), JSON.stringify(students));
                 if(activeQueryClass === cName) activeQueryClass = '';
                 render();
-                showToast('🗑️ تمت إزالة الصف وطلابها بنجاح!');
+                showToast('🗑️ تمت إزالة الصف وطالباته بنجاح!');
             }
         }
 
@@ -1637,14 +1694,14 @@ button:hover { opacity: 0.9; }
             tbody.innerHTML = '';
 
             if(!selectedClass) {
-                tbody.innerHTML = `<tr><td colspan="5" style="padding: 20px; opacity: 0.7;">الرجاء اختيار الصف الدراسي من القائمة أعلاه لعرض تقرير رصد المؤشرات ودرجات الطلاب.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" style="padding: 20px; opacity: 0.7;">الرجاء اختيار الصف الدراسي من القائمة أعلاه لعرض تقرير رصد المؤشرات ودرجات الطالبات.</td></tr>`;
                 analysisBox.style.display = 'none';
                 return;
             }
 
             const classStudents = students.filter(s => (s.classCustom || currentGrade) === selectedClass);
             if(classStudents.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="padding: 20px; opacity: 0.7;">لا توجد طلاب مسجلين في هذا الصف.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" style="padding: 20px; opacity: 0.7;">لا توجد طالبات مسجلات في هذا الصف.</td></tr>`;
                 analysisBox.style.display = 'none';
                 return;
             }
@@ -1658,7 +1715,7 @@ button:hover { opacity: 0.9; }
                 sum2 += Number(s.exam2) || 0;
 
                 const tr = document.createElement('tr');
-                let examMsg = 'عزيزي ولي أمر الطالب ' + s.name + '، نود إفادتكم بدرجات اختبارات مادة الرياضيات:\n- اختبار الفترة الأولى: ' + (s.exam1 || 0) + '/20\n- اختبار الفترة الثانية: ' + (s.exam2 || 0) + '/20\nمع تمنياتنا له بدوام التوفيق والنجاح.';
+                let examMsg = 'عزيزي ولي أمر الطالبة ' + s.name + '، نود إفادتكم بدرجات اختبارات مادة الرياضيات:\n- اختبار الفترة الأولى: ' + (s.exam1 || 0) + '/20\n- اختبار الفترة الثانية: ' + (s.exam2 || 0) + '/20\nمع تمنياتنا لها بدوام التوفيق والنجاح.';
                 let encodedExamMsg = encodeURIComponent(examMsg);
 
                 tr.innerHTML = `
@@ -1698,10 +1755,10 @@ button:hover { opacity: 0.9; }
         }
 
         function exportExcel() {
-            if(students.length === 0) { alert('لا توجد بيانات طلاب لتصديرها!'); return; }
+            if(students.length === 0) { alert('لا توجد بيانات طالبات لتصديرها!'); return; }
             const dataToExport = students.map((s, idx) => ({
                 "م": idx + 1,
-                "اسم الطالب": s.name,
+                "اسم الطالبة": s.name,
                 "الصف": s.classCustom || currentGrade,
                 "رقم الجوال": s.phone || '',
                 "الغياب": s.absence || 0,
@@ -1718,7 +1775,7 @@ button:hover { opacity: 0.9; }
             ws['!views'].push({ rightToLeft: true });
 
             const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "سجل طلاب الرياضيات");
+            XLSX.utils.book_append_sheet(wb, ws, "سجل طالبات الرياضيات");
             XLSX.writeFile(wb, `سجل_الرياضيات_${currentGrade}.xlsx`);
             showToast('📊 تم تصدير ملف الإكسل بنجاح!');
         }
@@ -1743,7 +1800,7 @@ button:hover { opacity: 0.9; }
 
                     let count = 0;
                     jsonData.forEach(row => {
-                        const name = row["اسم الطالب"] || row["اسم الطالبة"] || row["الاسم"] || "";
+                        const name = row["اسم الطالبة"] || row["اسم الطالب"] || row["الاسم"] || "";
                         const sClass = row["الصف"] || row["الصف/الشعبة"] || row["Class"] || currentGrade;
                         const phone = row["رقم الجوال"] || row["الجوال"] || row["Phone"] || "";
 
@@ -1767,7 +1824,7 @@ button:hover { opacity: 0.9; }
 
                     localStorage.setItem(getStorageKeyForStudents(), JSON.stringify(students));
                     render();
-                    showToast(`📂 تمت استعادة واستيراد (${count}) طالب بنجاح من ملف الإكسل!`);
+                    showToast(`📂 تمت استعادة واستيراد (${count}) طالبة بنجاح من ملف الإكسل!`);
                 } catch(err) {
                     console.error(err);
                     alert('حدث خطأ أثناء قراءة ملف الإكسل.');
@@ -1883,7 +1940,7 @@ button:hover { opacity: 0.9; }
             }
 
             const l = lessons[lessonIdx];
-            const msg = `عزيزي ولي أمر الطالب / ${s.name}\nنحيطكم علماً بأننا تناولنا اليوم في مادة الرياضيات درس:\n📘 (${l.chapter}) - ${l.title}\n💡 المفاهيم والتمارين المرتبطة: ${l.desc}\nنرجو منكم متابعة ابنكم وتعزيز مهاراته الحسابية.\nمع تقديـرنا، المعلم: ${TEACHER_NAME} - ${SCHOOL_NAME}`;
+            const msg = `عزيزي ولي أمر الطالبة / ${s.name}\nنحيطكم علماً بأننا تناولنا اليوم في مادة الرياضيات درس:\n📘 (${l.chapter}) - ${l.title}\n💡 المفاهيم والتمارين المرتبطة: ${l.desc}\nنرجو منكم متابعة ابنتكم وتعزيز مهاراتها الحسابية.\nمع تقديـرنا، المعلم: ${TEACHER_NAME} - ${SCHOOL_NAME}`;
             
             preview.textContent = msg;
             btn.href = `https://wa.me/${s.phone || ''}?text=` + encodeURIComponent(msg);
@@ -1908,7 +1965,7 @@ button:hover { opacity: 0.9; }
                 text = customMotivations[idx].text;
             }
 
-            const finalMsg = `إلى ولي أمر الطالب / ${s.name}\n\n${text}\n\nمع خالص الشكر، المعلم: ${TEACHER_NAME} - ${SCHOOL_NAME}`;
+            const finalMsg = `إلى ولي أمر الطالبة / ${s.name}\n\n${text}\n\nمع خالص الشكر، المعلم: ${TEACHER_NAME} - ${SCHOOL_NAME}`;
             preview.textContent = finalMsg;
             btn.href = `https://wa.me/${s.phone || ''}?text=` + encodeURIComponent(finalMsg);
         }
@@ -1932,12 +1989,12 @@ button:hover { opacity: 0.9; }
             if(selectedStudentIndex === '') return;
             const s = students[selectedStudentIndex];
             if(!s.phone) {
-                alert('لا يوجد رقم جوال مسجل لهذا الطالب.');
+                alert('لا يوجد رقم جوال مسجل لهذه الطالبة.');
                 return;
             }
 
-            const fullMsg = `📋 *التقرير الشامل لأداء الطالب في مادة الرياضيات* 📐\n\n` +
-                `👤 اسم الطالب: *${s.name}*\n` +
+            const fullMsg = `📋 *التقرير الشامل لأداء الطالبة في مادة الرياضيات* 📐\n\n` +
+                `👤 اسم الطالبة: *${s.name}*\n` +
                 `🏫 الصف: *${s.classCustom || currentGrade}*\n` +
                 `🏫 المدرسة: *${SCHOOL_NAME}*\n\n` +
                 `📊 *المؤشرات والإحصائيات الحالية:*\n` +
@@ -2009,13 +2066,13 @@ button:hover { opacity: 0.9; }
 
             tbody.innerHTML = '';
             if(targetStudents.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="padding: 15px; opacity: 0.7;">لا توجد طلاب مسجلين في هذا الصف.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" style="padding: 15px; opacity: 0.7;">لا توجد طالبات مسجلات في هذا الصف.</td></tr>`;
                 return;
             }
 
             targetStudents.forEach((s, i) => {
                 const globalIdx = students.indexOf(s);
-                const personalizedMsg = `عزيزي ولي أمر الطالب / ${s.name}\n\n` + msgTemplate;
+                const personalizedMsg = `عزيزي ولي أمر الطالبة / ${s.name}\n\n` + msgTemplate;
                 const encodedMsg = encodeURIComponent(personalizedMsg);
 
                 const tr = document.createElement('tr');
@@ -2039,92 +2096,99 @@ button:hover { opacity: 0.9; }
 
         const savedTheme = localStorage.getItem('awwal_math_theme_v4');
         if(savedTheme) document.body.className = savedTheme;
-window.onload = function() {
-    renderLessons();
-    render();
-    setupMasterySystem(); // <-- أضف هذا السطر فقط
-};
-      
-  // دالة لتعبئة قائمة الدروس وتحديث الجدول
-function setupMasterySystem() {
-    const select = document.getElementById('masteryLessonSelect');
-    if(!select) return;
-    lessons.forEach((l, idx) => {
-        select.innerHTML += `<option value="${idx}">[${l.chapter}] ${l.title}</option>`;
-    });
-}
 
-function renderMasteryTable() {
-    const lessonIdx = document.getElementById('masteryLessonSelect').value;
-    const tbody = document.getElementById('masteryTbody');
-    if(lessonIdx === "") return;
+        window.onload = function() {
+            renderLessons();
+            render();
+            setupMasterySystem();
+        };
 
-    tbody.innerHTML = '';
-    students.forEach((s, idx) => {
-        if(!s.mastery) s.mastery = {};
-        const isMastered = !!s.mastery[lessonIdx];
-        
-        tbody.innerHTML += `
-            <tr>
-                <td><strong>${s.name}</strong></td>
-                <td><span class="class-badge">${s.classCustom || currentGrade}</span></td>
-                <td><span id="m_badge_${idx}" class="class-badge" style="background:${isMastered ? '#059669' : '#f59e0b'}">${isMastered ? 'متقن' : 'بحاجة لمراجعة'}</span></td>
-                <td><button class="btn-action" onclick="toggleMastery(${idx}, ${lessonIdx})">🔄 تبديل</button></td>
-            </tr>
-        `;
-    });
-}
-
-function toggleMastery(sIdx, lIdx) {
-    if(!students[sIdx].mastery) students[sIdx].mastery = {};
-    students[sIdx].mastery[lIdx] = !students[sIdx].mastery[lIdx];
-    localStorage.setItem(getStorageKeyForStudents(), JSON.stringify(students));
-    renderMasteryTable();
-    showToast('✅ تم تحديث حالة الإتقان!');
-}// دالة حفظ نسخة احتياطية كاملة لبيانات الداش بورد
-function backupDashboardData() {
-    const dashboardBackup = {
-        students: typeof students !== 'undefined' ? students : [],
-        lessons: typeof lessons !== 'undefined' ? lessons : [],
-        savedTheme: localStorage.getItem('awwal_math_theme_v4') || 'theme-default',
-        timestamp: new Date().toLocaleString('ar-SA')
-    };
-
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dashboardBackup));
-    const dlAnchor = document.createElement('a');
-    dlAnchor.setAttribute("href", dataStr);
-    dlAnchor.setAttribute("download", `نسخة_احتياطية_داش_بورد_الرياضيات_${new Date().toISOString().slice(0,10)}.json`);
-    document.body.appendChild(dlAnchor);
-    dlAnchor.click();
-    dlAnchor.remove();
-
-    if (typeof showToast === 'function') {
-        showToast('💾 تم تحميل النسخة الاحتياطية لكافة بياناتك بنجاح!');
-    } else {
-        alert('تم حفظ النسخة الاحتياطية على جهازك بنجاح.');
-    }
-}function restoreDashboardData(event) {
-    const file = event.target.files[0];
-    if(!file) return;
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            const imported = JSON.parse(e.target.result);
-            if(imported) {
-                if(imported.students) localStorage.setItem(getStorageKeyForStudents(), JSON.stringify(imported.students));
-                if(imported.lessons) localStorage.setItem(getStorageKeyForLessons(), JSON.stringify(imported.lessons));
-                location.reload(); // تحديث الصفحة لتظهر البيانات المستعادة
-            } else {
-                alert('ملف النسخة الاحتياطية غير صالح.');
-            }
-        } catch(err) {
-            alert('خطأ في قراءة ملف JSON.');
-        } finally {
-            event.target.value = '';
+        function setupMasterySystem() {
+            const select = document.getElementById('masteryLessonSelect');
+            if(!select) return;
+            select.innerHTML = '<option value="">-- اختر الدرس لتحديد حالة الإتقان --</option>';
+            lessons.forEach((l, idx) => {
+                select.innerHTML += `<option value="${idx}">[${l.chapter}] ${l.title}</option>`;
+            });
         }
-    };
-    reader.readAsText(file);
-}
+
+        function renderMasteryTable() {
+            const lessonIdx = document.getElementById('masteryLessonSelect').value;
+            const tbody = document.getElementById('masteryTbody');
+            if(lessonIdx === "") {
+                tbody.innerHTML = `<tr><td colspan="4">الرجاء اختيار درس من القائمة أعلاه</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = '';
+            students.forEach((s, idx) => {
+                if(!s.mastery) s.mastery = {};
+                const isMastered = !!s.mastery[lessonIdx];
+                
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${s.name}</strong></td>
+                        <td><span class="class-badge">${s.classCustom || currentGrade}</span></td>
+                        <td><span id="m_badge_${idx}" class="class-badge" style="background:${isMastered ? '#059669' : '#f59e0b'}">${isMastered ? 'متقن' : 'بحاجة لمراجعة'}</span></td>
+                        <td><button class="btn-action" onclick="toggleMastery(${idx}, ${lessonIdx})">🔄 تبديل</button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function toggleMastery(sIdx, lIdx) {
+            if(!students[sIdx].mastery) students[sIdx].mastery = {};
+            students[sIdx].mastery[lIdx] = !students[sIdx].mastery[lIdx];
+            localStorage.setItem(getStorageKeyForStudents(), JSON.stringify(students));
+            renderMasteryTable();
+            showToast('✅ تم تحديث حالة الإتقان!');
+        }
+
+        function backupAllData() {
+            const fullBackup = {
+                students: typeof students !== 'undefined' ? students : [],
+                lessons: typeof lessons !== 'undefined' ? lessons : [],
+                timestamp: new Date().toLocaleString('ar-SA')
+            };
+
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(fullBackup));
+            const dlAnchor = document.createElement('a');
+            dlAnchor.setAttribute("href", dataStr);
+            dlAnchor.setAttribute("download", `نسخة_احتياطية_الداش_بورد_${new Date().toISOString().slice(0,10)}.json`);
+            document.body.appendChild(dlAnchor);
+            dlAnchor.click();
+            dlAnchor.remove();
+            
+            if (typeof showToast === 'function') {
+                showToast('💾 تم حفظ النسخة الاحتياطية على جهازك بنجاح!');
+            } else {
+                alert('تم حفظ النسخة الاحتياطية على جهازك بنجاح.');
+            }
+        }
+
+        function restoreDashboardData(event) {
+            const file = event.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if(imported) {
+                        if(imported.students) localStorage.setItem(getStorageKeyForStudents(), JSON.stringify(imported.students));
+                        if(imported.lessons) localStorage.setItem(getStorageKeyForLessons(), JSON.stringify(imported.lessons));
+                        alert('📂 تم استرجاع البيانات بنجاح!');
+                        location.reload();
+                    } else {
+                        alert('ملف النسخة الاحتياطية غير صالح.');
+                    }
+                } catch(err) {
+                    alert('خطأ في قراءة ملف JSON.');
+                } finally {
+                    event.target.value = '';
+                }
+            };
+            reader.readAsText(file);
+        }
     </script>
 </body>
 </html>
