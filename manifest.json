@@ -1,6 +1,6 @@
 {
-  "name": "النظام الشامل للمدرسة الابتدائية الأولى",
-  "short_name": "سجل متابعة مادة الرياضيات",
+  "name": "متابعة رياضيات",
+  "short_name": " متابعة الرياضيات",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#e0f2fe",
