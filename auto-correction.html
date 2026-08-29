@@ -312,8 +312,19 @@
         @media print {
             @page { size: A4 portrait; margin: 10mm; }
             body * { visibility: hidden !important; }
-            .printable-area, .printable-area * { visibility: visible !important; }
-            .printable-area { position: absolute; left: 0; top: 0; width: 100% !important; background: white !important; padding: 0 !important; border: none !important; box-shadow: none !important; }
+            
+            /* طباعة الاختبار فقط عند تفعيله */
+            .printable-exam-area, .printable-exam-area * { visibility: visible !important; }
+            .printable-exam-area { position: absolute; left: 0; top: 0; width: 100% !important; background: white !important; padding: 0 !important; border: none !important; box-shadow: none !important; }
+
+            /* طباعة كشف الدرجات فقط عند تفعيله */
+            .printable-sheet-area, .printable-sheet-area * { visibility: visible !important; }
+            .printable-sheet-area { position: absolute; left: 0; top: 0; width: 100% !important; background: white !important; padding: 0 !important; border: none !important; box-shadow: none !important; }
+
+            /* طباعة تقرير التحليل فقط عند تفعيله */
+            .printable-analysis-area, .printable-analysis-area * { visibility: visible !important; }
+            .printable-analysis-area { position: absolute; left: 0; top: 0; width: 100% !important; background: white !important; padding: 0 !important; border: none !important; box-shadow: none !important; }
+
             .no-print { display: none !important; }
             .question-row { break-inside: avoid; page-break-inside: avoid; margin-bottom: 8px; padding: 6px 8px; border: 1px solid #94a3b8; }
         }
@@ -393,7 +404,7 @@
                 <button class="action-btn" onclick="generateTestModel()">⚡ توليد ورقة الاختبار المعتمدة</button>
             </div>
 
-            <div id="questionsPreviewBox" class="questions-preview printable-area">
+            <div id="questionsPreviewBox" class="questions-preview printable-exam-area">
                 <div class="exam-header">
                     <h3>المملكة العربية السعودية - وزارة التعليم</h3>
                     <h4 id="printSchoolTitle">مدرسة داؤود بن عروة الثقفي الابتدائية</h4>
@@ -408,7 +419,7 @@
                 <div id="generatedQuestionsList"></div>
 
                 <div class="no-print" style="margin-top: 15px;">
-                    <button class="action-btn btn-print" onclick="window.print()">🖨️ طباعة الاختبار بملء صفحة A4</button>
+                    <button class="action-btn btn-print" onclick="printExamOnly()">🖨️ طباعة الاختبار بملء صفحة A4</button>
                 </div>
             </div>
         </div>
@@ -446,8 +457,8 @@
             </div>
         </div>
 
-        <!-- كشف الدرجات المستقل للطباعة (أسماء ودرجات فقط بدون تحليل) -->
-        <div id="allGradesSheetPrintArea" class="sheet-print-container printable-area">
+        <!-- كشف الدرجات المستقل للطباعة (أسماء ودرجات فقط بدون أي أسئلة) -->
+        <div id="allGradesSheetPrintArea" class="sheet-print-container printable-sheet-area">
             <div style="text-align: center; border-bottom: 2px solid #1e3a8a; padding-bottom: 8px; margin-bottom: 15px;">
                 <h3 style="margin: 0; color: #1e3a8a; font-size: 15px;">المملكة العربية السعودية - وزارة التعليم</h3>
                 <h4 id="sheetPrintSchoolName" style="margin: 4px 0; font-size: 13px; color: #374151;">مدرسة داؤود بن عروة الثقفي الابتدائية</h4>
@@ -473,8 +484,8 @@
             </div>
         </div>
 
-        <!-- تقرير التحليل المستقل في أيقونة منفصلة -->
-        <div id="analysisContainer" class="analysis-box printable-area">
+        <!-- تقرير التحليل المستقل -->
+        <div id="analysisContainer" class="analysis-box printable-analysis-area">
             <h3 style="margin-top:0; color: #b45309; border-bottom: 2px solid #f59e0b; padding-bottom: 8px; font-size: 16px;">📈 تقرير تحليل نتائج الطلاب ومهارات نافس (مستقل)</h3>
             <div id="analysisContentText" style="font-size: 12.5px; line-height: 1.6; color: #1f2937;"></div>
             <div class="no-print" style="margin-top: 15px;">
@@ -559,7 +570,7 @@
                     { q: "الشكل الهندسي الذي له ٤ أضلاع متساوية هو:", options: ["المثلث", "المربع", "الدائرة", "المستطيل"], correct: "ب" },
                     { q: "ناتج طرح: ٥٠ - ٢٠ يساوي:", options: ["٢٠", "٣٠", "٤٠", "١٠"], correct: "ب" },
                     { q: "اكتب العدد مائتان وخمسة بالأرقام:", options: ["٢٥٠", "٢٠٥", "٥٠٢", "٢٥"], correct: "ب" },
-                    { q: "إذا كان مع خالد ٣ فئات من نقد ١٠ ريالات، فكم إجمالي المبلغ؟", options: ["١٠ ريالات", "٢٠ ريالاً", "٣٠ ريالاً", "٤٠ ريالاً"], correct: "ج" },
+                    { q: "إذا كان خالد يملك ٣ فئات من نقد ١٠ ريالات، فكم إجمالي المبلغ؟", options: ["١٠ ريالات", "٢٠ ريالاً", "٣٠ ريالاً", "٤٠ ريالاً"], correct: "ج" },
                     { q: "التقدير الأنسب لطول باب الفصل هو:", options: ["٢ متر", "٢ سنتيمتر", "٢٠٠ كيلومتر", "١٠ مليمتر"], correct: "أ" },
                     { q: "مع حامد ٤٥ قلماً وأعطى زميله ١٥ قلماً، كم بقي معه؟", options: ["٣٠ قلماً", "٦٠ قلماً", "٢٠ قلماً", "٢٥ قلماً"], correct: "أ" }
                 ]
@@ -775,7 +786,6 @@
                 rawQuestions = [...fallbackBank["science"]];
             }
 
-            // ضمان 10 فقرات בדיוק
             activeQuestions = rawQuestions.slice(0, 10);
             while(activeQuestions.length < 10 && rawQuestions.length > 0) {
                 activeQuestions.push(rawQuestions[activeQuestions.length % rawQuestions.length]);
@@ -805,6 +815,14 @@
             listContainer.innerHTML = htmlContent;
             convertAllNumbersInDOM();
             window.scrollTo({ top: previewBox.offsetTop, behavior: 'smooth' });
+        }
+
+        function printExamOnly() {
+            const previewBox = document.getElementById('questionsPreviewBox');
+            previewBox.style.display = 'block';
+            setTimeout(() => {
+                window.print();
+            }, 200);
         }
 
         function startTouchGradingSession() {
@@ -992,8 +1010,12 @@
             let idx = 1;
             for (let sName in allClassResults) {
                 let data = allClassResults[sName];
-                let percentage = (data.score / maxScore) * 100;
-                let level = percentage >= 90 ? "متفوق (متقن تماماً)" : (percentage >= 75 ? "متقن" : (percentage >= 50 ? "مبكّر / متوسط" : "يحتاج تحسين"));
+                let percentage = maxScore > 0 ? (data.score / maxScore) * 100 : 0;
+                let level = "";
+                if (percentage >= 90) level = "متفوق (متقن تماماً)";
+                else if (percentage >= 75) level = "متقن";
+                else if (percentage >= 50) level = "مبكّر / متوسط";
+                else level = "يحتاج تحسين (غير مقتن)";
 
                 tbody.innerHTML += `
                     <tr>
@@ -1012,9 +1034,6 @@
             prepareGradesPrintSheet();
             const sheetArea = document.getElementById('allGradesSheetPrintArea');
             sheetArea.style.display = 'block';
-            
-            // إخفاء التحليل أثناء طباعة كشف الدرجات
-            document.getElementById('analysisContainer').style.display = 'none';
 
             setTimeout(() => {
                 window.print();
@@ -1053,6 +1072,15 @@
             let classAverage = count > 0 ? (totalScoreSum / count).toFixed(1) : 0;
             let percentageAvg = count > 0 ? ((totalScoreSum / (count * maxScore)) * 100).toFixed(1) : 0;
 
+            let dynamicNafisLevel = "مستوى منخفض (يحتاج دعم وتدخل علاجي)";
+            if (percentageAvg >= 90) {
+                dynamicNafisLevel = "مستوى متقدم (تجاوز المعيار المستهدف للطلاب)";
+            } else if (percentageAvg >= 75) {
+                dynamicNafisLevel = "مستوى متقن";
+            } else if (percentageAvg >= 50) {
+                dynamicNafisLevel = "مستوى متوسط / ملائم";
+            }
+
             document.getElementById('analysisContentText').innerHTML = `
                 <table style="width:100%; border-collapse:collapse; margin-top:5px;" border="1">
                     <tr style="background:#fef3c7; text-align:center;"><th style="padding:6px;">مؤشر القياس الإحصائي</th><th style="padding:6px;">القيمة التقديرية</th></tr>
@@ -1061,7 +1089,7 @@
                     <tr><td style="padding:6px;">متوسط أداء الفصل العام</td><td style="text-align:center;"><b>${toArabicDigits(classAverage)} / ${toArabicDigits(maxScore)}</b> (${toArabicDigits(percentageAvg)}٪)</td></tr>
                     <tr><td style="padding:6px;">أعلى درجة بالفصل</td><td style="text-align:center; color:var(--success);"><b>${toArabicDigits(highestScore)} / ${toArabicDigits(maxScore)}</b></td></tr>
                     <tr><td style="padding:6px;">أقل درجة بالفصل</td><td style="text-align:center; color:var(--danger);"><b>${toArabicDigits(lowestScore)} / ${toArabicDigits(maxScore)}</b></td></tr>
-                    <tr><td style="padding:6px;">مستوى إتقان مهارات نافس</td><td style="text-align:center; color:var(--primary);"><b>مستوى متقدم (تجاوز المعيار المستهدف للطلاب)</b></td></tr>
+                    <tr><td style="padding:6px;">مستوى إتقان مهارات نافس</td><td style="text-align:center; color:var(--primary);"><b>${dynamicNafisLevel}</b></td></tr>
                 </table>
             `;
             convertAllNumbersInDOM();
@@ -1070,7 +1098,6 @@
         function printAnalysisBoxOnly() {
             const analysisBox = document.getElementById('analysisContainer');
             analysisBox.style.display = 'block';
-            document.getElementById('allGradesSheetPrintArea').style.display = 'none';
 
             setTimeout(() => {
                 window.print();
